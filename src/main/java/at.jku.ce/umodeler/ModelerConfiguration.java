@@ -5,9 +5,13 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
+/**
+ * This Spring Configuration file enables the ressources folder to be served statically.
+ * The client-side modelling web application can request all neccessary libraries on demand.
+ */
 @Configuration
 @EnableWebMvc
-public class MyConf implements WebMvcConfigurer {
+public class ModelerConfiguration implements WebMvcConfigurer {
 
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {

@@ -1,8 +1,8 @@
 package at.jku.ce.umodeler;
 
 public class Pair<FST, SND> {
-    FST fst;
-    SND snd;
+    private FST fst;
+    private SND snd;
 
     public Pair(FST fst, SND snd) {
         this.fst = fst;
