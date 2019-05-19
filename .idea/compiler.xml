@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="at.jku.ce.umodeler.main" target="1.8" />
+      <module name="at.jku.ce.umodeler.test" target="1.8" />
+      <module name="uModeler.main" target="1.8" />
+      <module name="uModeler.test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>
