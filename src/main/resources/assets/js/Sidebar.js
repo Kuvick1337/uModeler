@@ -80,14 +80,15 @@ Sidebar.prototype.init = function()
 	var dir = STENCIL_PATH;
 	
 	this.addSearchPalette(true);
-	this.addGeneralPalette(true);
+	this.addGeneralPalette(false);
+	this.addBpmnPalette(dir, true);
+	this.addSbpmPalette(dir, false);
 	this.addMiscPalette(false);
 	this.addAdvancedPalette(false);
 	this.addBasicPalette(dir);
 	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
 		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
 	this.addUmlPalette(false);
-	this.addBpmnPalette(dir, false);
 	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml',
 		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
 	this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
@@ -1753,6 +1754,37 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 	];
 	
 	this.addPaletteFunctions('bpmn', 'BPMN ' + mxResources.get('general'), false, fns);
+};
+
+/**
+ * Adds the S-BPM library to the sidebar.
+ * TODO: add all the S-BPM vertices
+ */
+Sidebar.prototype.addSbpmPalette = function (dir, expand) {
+	// Avoids having to bind all functions to "this"
+	var sb = this;
+
+	var fns =
+		[
+			this.addEntry('bpmn message flow', function () {
+				var edge = new mxCell('', new mxGeometry(0, 0, 0, 0), 'startArrow=oval;startFill=0;startSize=7;endArrow=block;endFill=0;endSize=10;dashed=1;html=1;');
+				edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+				edge.geometry.setTerminalPoint(new mxPoint(100, 0), false);
+				edge.geometry.relative = true;
+				edge.edge = true;
+
+				var cell = new mxCell('', new mxGeometry(0, 0, 20, 14), 'shape=message;html=1;outlineConnect=0;');
+				cell.geometry.relative = true;
+				cell.vertex = true;
+				cell.geometry.offset = new mxPoint(-10, -7);
+				edge.insert(cell);
+
+				return sb.createEdgeTemplateFromCells([edge], 100, 0, 'Message Flow 2');
+			}),
+			this.createEdgeTemplateEntry('shape=link;html=1;', 100, 0, '', 'Link', null, 'bpmn link')
+		];
+
+	this.addPaletteFunctions('bpmn', 'S-BPM ' + mxResources.get('general'), false, fns);
 };
 
 /**

@@ -26,7 +26,7 @@ public class SaveController {
     @CrossOrigin
     @PostMapping(value = "/save", consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void save(HttpServletRequest request, HttpEntity<String> httpEntity) {
-        System.out.println(request.getQueryString());
+        System.out.println("Request query string: " + request.getQueryString());
         Arrays.stream(httpEntity.getBody().split("&")).map(entity -> {
             String[] result = entity.split("=");
             try {
@@ -44,7 +44,7 @@ public class SaveController {
         });
 
         try {
-            System.out.println("save was called with " + objectMapper.writeValueAsString(httpEntity));
+            System.out.println("POST save was called with " + objectMapper.writeValueAsString(httpEntity));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -53,7 +53,7 @@ public class SaveController {
     @CrossOrigin
     @GetMapping("/save")
     public void saveGET(HttpServletRequest request, @RequestBody Object data) {
-        System.out.println("save get called");
+        System.out.println("GET save get called");
     }
 }
 
