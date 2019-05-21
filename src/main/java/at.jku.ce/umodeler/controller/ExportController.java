@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.net.URLDecoder;
 
 @RestController
 public class ExportController {
@@ -16,9 +17,12 @@ public class ExportController {
 
     @CrossOrigin
     @PostMapping("/export")
-    public void dImport(HttpServletRequest request, @RequestBody Object data) {
+    public void postExport(HttpServletRequest request, @RequestBody Object data) {
+        // from https://jgraph.github.io/mxgraph/docs/js-api/files/editor/mxEditor-js.html
+//        URLDecoder.decode(request.getParameter("xml"), "UTF-8").replace("\n", "&#xa;");
+
         try {
-            System.out.println("POST import was called with " + objectMapper.writeValueAsString(data));
+            System.out.println("POST export was called with " + objectMapper.writeValueAsString(data));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
@@ -26,7 +30,7 @@ public class ExportController {
 
     @CrossOrigin
     @GetMapping(value = "/export")
-    public void dImportGET(HttpServletRequest request) {
+    public void getExport(HttpServletRequest request) {
         System.out.println("GET export get called");
     }
 }

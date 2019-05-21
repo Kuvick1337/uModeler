@@ -24,4 +24,6 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
  -> use "addBpmnPalette" as template for S-BPM elements
 * add local import/export  
  -> https://jgraph.github.io/mxgraph/docs/js-api/files/editor/mxEditor-js.html
+ -> maybe an example: https://github.com/jgraph/mxgraph/blob/master/java/examples/com/mxgraph/examples/web/resources/export.html
+ -> in Dialog.js werden die Dialoge zusammengebaut (innere Klasse ExportDialog)
 * add remote import/export (uLearn)
