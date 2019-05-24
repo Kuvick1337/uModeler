@@ -17,6 +17,9 @@ window.STYLE_PATH = window.STYLE_PATH || 'assets/styles';
 window.CSS_PATH = window.CSS_PATH || 'assets/styles';
 window.OPEN_FORM = window.OPEN_FORM || 'formOpen.html';
 
+window.ULEARN_SAVE_URL = window.ULEARN_SAVE_URL || 'http://localhost:8080/Ulearn_save';
+window.ULEARN_LOAD_URL = window.ULEARN_LOAD_URL || 'http://localhost:8080/Ulearn_load';
+
 // Sets the base path, the UI language via URL param and configures the
 // supported languages to avoid 404s. The loading of all core language
 // resources is disabled as all required resources are in grapheditor.

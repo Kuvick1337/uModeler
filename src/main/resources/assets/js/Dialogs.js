@@ -826,7 +826,21 @@ var UlearnSaveDialog = function (editorUi) {
     td.colSpan = 2;
 
     var saveBtn = mxUtils.button(mxResources.get('saveUlearn'), mxUtils.bind(this, function () {
-        // TODO load xml and send to server for storage in ulearn
+        console.log("start save to Ulearn Button ")
+
+        var data = mxUtils.getXml(editorUi.editor.getGraphXml());
+        var filename = fileNameInput.value;
+        var format = "xml";
+
+        if (data.length < MAX_REQUEST_SIZE) {
+            editorUi.hideDialog();
+            var req = new mxXmlRequest(SAVE_URL, 'xml=' + encodeURIComponent(data) + '&filename=' +
+                encodeURIComponent(filename) + '&format=' + format);
+            req.simulate(document, '');
+        } else {
+            mxUtils.alert(mxResources.get('drawingTooLarge'));
+            mxUtils.popup(xml);
+        }
     }));
     saveBtn.className = 'geBtn gePrimaryBtn';
 
@@ -892,10 +906,19 @@ var UlearnLoadDialog = function (editorUi) {
     td.style.paddingTop = '22px';
     td.colSpan = 2;
 
-    var saveBtn = mxUtils.button(mxResources.get('loadUlearn'), mxUtils.bind(this, function () {
+    var loadBtn = mxUtils.button(mxResources.get('loadUlearn'), mxUtils.bind(this, function () {
         // TODO load xml from server and set it here
+        console.log("in here")
+
+        // example code taken from mxClient.js:3585
+        mxUtils.get(ULEARN_LOAD_URL, function (req) {
+            console.log("in anonymer funct");
+            var node = req.getDocumentElement();
+            var dec = new mxCodec(node.ownerDocument);
+            dec.decode(node, graph.getModel());
+        });
     }));
-    saveBtn.className = 'geBtn gePrimaryBtn';
+    loadBtn.className = 'geBtn gePrimaryBtn';
 
     var cancelBtn = mxUtils.button(mxResources.get('cancel'), function () {
         editorUi.hideDialog();
@@ -904,9 +927,9 @@ var UlearnLoadDialog = function (editorUi) {
 
     if (editorUi.editor.cancelFirst) {
         td.appendChild(cancelBtn);
-        td.appendChild(saveBtn);
+        td.appendChild(loadBtn);
     } else {
-        td.appendChild(saveBtn);
+        td.appendChild(loadBtn);
         td.appendChild(cancelBtn);
     }
 
