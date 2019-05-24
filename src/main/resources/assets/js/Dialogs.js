@@ -799,8 +799,31 @@ var UlearnSaveDialog = function (editorUi) {
     var tbody = document.createElement('tbody');
     table.setAttribute('cellpadding', (mxClient.IS_SF) ? '0' : '2');
 
+
+    // create input element filename
     row = document.createElement('tr');
     td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('filename') + ':');
+
+    row.appendChild(td);
+
+    var fileNameInput = document.createElement('input');
+    fileNameInput.setAttribute('type', 'text');
+    fileNameInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(fileNameInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+
+    // create Button row
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.setAttribute('align', 'right');
+    td.style.paddingTop = '22px';
+    td.colSpan = 2;
 
     var saveBtn = mxUtils.button(mxResources.get('saveUlearn'), mxUtils.bind(this, function () {
         // TODO load xml and send to server for storage in ulearn
@@ -843,8 +866,31 @@ var UlearnLoadDialog = function (editorUi) {
     var tbody = document.createElement('tbody');
     table.setAttribute('cellpadding', (mxClient.IS_SF) ? '0' : '2');
 
+
+    // create input element filename
     row = document.createElement('tr');
     td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('filename') + ':');
+
+    row.appendChild(td);
+
+    var fileNameInput = document.createElement('input');
+    fileNameInput.setAttribute('type', 'text');
+    fileNameInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(fileNameInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+
+    // create Button row
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.setAttribute('align', 'right');
+    td.style.paddingTop = '22px';
+    td.colSpan = 2;
 
     var saveBtn = mxUtils.button(mxResources.get('loadUlearn'), mxUtils.bind(this, function () {
         // TODO load xml from server and set it here
