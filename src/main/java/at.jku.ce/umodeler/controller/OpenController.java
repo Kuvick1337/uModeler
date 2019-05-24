@@ -21,7 +21,7 @@ public class OpenController {
     @RequestMapping(value = "/open", method = RequestMethod.POST,
             consumes = MediaType.APPLICATION_FORM_URLENCODED_VALUE)
     public void open(HttpServletRequest request) {
-        System.out.println("Post was called with ");
+        System.out.println("Open Post was called with ");
 
     }
 

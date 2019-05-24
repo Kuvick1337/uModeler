@@ -829,28 +829,29 @@ var ExportDialog = function (editorUi) {
     var imageFormatSelect = document.createElement('select');
     imageFormatSelect.style.width = '180px';
 
-    var pngOption = document.createElement('option');
-    pngOption.setAttribute('value', 'png');
-    mxUtils.write(pngOption, mxResources.get('formatPng'));
-    imageFormatSelect.appendChild(pngOption);
-
-    var gifOption = document.createElement('option');
-
-    if (ExportDialog.showGifOption) {
-        gifOption.setAttribute('value', 'gif');
-        mxUtils.write(gifOption, mxResources.get('formatGif'));
-        imageFormatSelect.appendChild(gifOption);
-    }
-
-    var jpgOption = document.createElement('option');
-    jpgOption.setAttribute('value', 'jpg');
-    mxUtils.write(jpgOption, mxResources.get('formatJpg'));
-    imageFormatSelect.appendChild(jpgOption);
-
-    var pdfOption = document.createElement('option');
-    pdfOption.setAttribute('value', 'pdf');
-    mxUtils.write(pdfOption, mxResources.get('formatPdf'));
-    imageFormatSelect.appendChild(pdfOption);
+    // disabled options because export doesn't work
+    // var pngOption = document.createElement('option');
+    // pngOption.setAttribute('value', 'png');
+    // mxUtils.write(pngOption, mxResources.get('formatPng'));
+    // imageFormatSelect.appendChild(pngOption);
+    //
+    // var gifOption = document.createElement('option');
+    //
+    // if (ExportDialog.showGifOption) {
+    //     gifOption.setAttribute('value', 'gif');
+    //     mxUtils.write(gifOption, mxResources.get('formatGif'));
+    //     imageFormatSelect.appendChild(gifOption);
+    // }
+    //
+    // var jpgOption = document.createElement('option');
+    // jpgOption.setAttribute('value', 'jpg');
+    // mxUtils.write(jpgOption, mxResources.get('formatJpg'));
+    // imageFormatSelect.appendChild(jpgOption);
+    //
+    // var pdfOption = document.createElement('option');
+    // pdfOption.setAttribute('value', 'pdf');
+    // mxUtils.write(pdfOption, mxResources.get('formatPdf'));
+    // imageFormatSelect.appendChild(pdfOption);
 
     var svgOption = document.createElement('option');
     svgOption.setAttribute('value', 'svg');
@@ -1134,6 +1135,7 @@ ExportDialog.exportFile = function (editorUi, name, format, bg, s, b) {
     } else if (format == 'svg') {
         ExportDialog.saveLocalFile(editorUi, mxUtils.getXml(graph.getSvg(bg, s, b)), name, format);
     } else {
+        // sends the raw XML to the backend. file ending and format parameter contain the desired format (e.g. PNG)
         var bounds = graph.getGraphBounds();
 
         // New image export
