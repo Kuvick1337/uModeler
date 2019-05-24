@@ -31,4 +31,5 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
 * add export as pictures
  -> XML needs to be converted in binary data (picture, e.g. png) 
  -> see Java backend classes mxCodec, mxGraphModel, mxCellRenderer and mxGraph (!!!)
-* add Java Backend as module to the project (better separation than as subfolder)
+ -> example for PDF Export (probably requires JAR from java/jar folder): https://github.com/jgraph/mxgraph/blob/master/java/examples/com/mxgraph/examples/PdfExport.java
+ * add Java Backend as module to the project (better separation than as subfolder)

@@ -407,17 +407,21 @@ Menus.prototype.init = function () {
 
         this.addMenuItems(menu, ['-', 'fitWindow', 'fitPageWidth', 'fitPage', 'fitTwoPages', '-', 'customZoom'], parent);
     })));
+
     this.put('file', new Menu(mxUtils.bind(this, function (menu, parent) {
-        this.addMenuItems(menu, ['new', 'open', '-', 'save', 'saveAs', '-', 'import', 'export', '-', 'pageSetup', 'print'], parent);
+        this.addMenuItems(menu, ['new', 'open', '-', 'save', 'saveAs', '-', 'import', 'export', '-', 'saveUlearn', 'loadUlearn', '-', 'pageSetup', 'print'], parent);
     })));
+
     this.put('edit', new Menu(mxUtils.bind(this, function (menu, parent) {
         this.addMenuItems(menu, ['undo', 'redo', '-', 'cut', 'copy', 'paste', 'delete', '-', 'duplicate', '-',
             'editData', 'editTooltip', 'editStyle', '-', 'edit', '-', 'editLink', 'openLink', '-',
             'selectVertices', 'selectEdges', 'selectAll', 'selectNone', '-', 'lockUnlock']);
     })));
+
     this.put('extras', new Menu(mxUtils.bind(this, function (menu, parent) {
         this.addMenuItems(menu, ['copyConnect', 'collapseExpand', '-', 'editDiagram']);
     })));
+
     this.put('help', new Menu(mxUtils.bind(this, function (menu, parent) {
         this.addMenuItems(menu, ['help', '-', 'about']);
     })));

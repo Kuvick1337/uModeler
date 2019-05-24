@@ -783,6 +783,94 @@ var EditDiagramDialog = function (editorUi) {
 EditDiagramDialog.showNewWindowOption = true;
 
 /**
+ * Constructs a new dialog for storing a XML in uLearn
+ */
+var UlearnSaveDialog = function (editorUi) {
+    var graph = editorUi.editor.graph;
+    var bounds = graph.getGraphBounds();
+    var scale = graph.view.scale;
+
+    var width = Math.ceil(bounds.width / scale);
+    var height = Math.ceil(bounds.height / scale);
+
+    var row, td;
+
+    var table = document.createElement('table');
+    var tbody = document.createElement('tbody');
+    table.setAttribute('cellpadding', (mxClient.IS_SF) ? '0' : '2');
+
+    row = document.createElement('tr');
+    td = document.createElement('td');
+
+    var saveBtn = mxUtils.button(mxResources.get('saveUlearn'), mxUtils.bind(this, function () {
+        // TODO load xml and send to server for storage in ulearn
+    }));
+    saveBtn.className = 'geBtn gePrimaryBtn';
+
+    var cancelBtn = mxUtils.button(mxResources.get('cancel'), function () {
+        editorUi.hideDialog();
+    });
+    cancelBtn.className = 'geBtn';
+
+    if (editorUi.editor.cancelFirst) {
+        td.appendChild(cancelBtn);
+        td.appendChild(saveBtn);
+    } else {
+        td.appendChild(saveBtn);
+        td.appendChild(cancelBtn);
+    }
+
+    row.appendChild(td);
+    tbody.appendChild(row);
+    table.appendChild(tbody);
+    this.container = table;
+};
+
+/**
+ * Constructs a new dialog for loading a XML from uLearn
+ */
+var UlearnLoadDialog = function (editorUi) {
+    var graph = editorUi.editor.graph;
+    var bounds = graph.getGraphBounds();
+    var scale = graph.view.scale;
+
+    var width = Math.ceil(bounds.width / scale);
+    var height = Math.ceil(bounds.height / scale);
+
+    var row, td;
+
+    var table = document.createElement('table');
+    var tbody = document.createElement('tbody');
+    table.setAttribute('cellpadding', (mxClient.IS_SF) ? '0' : '2');
+
+    row = document.createElement('tr');
+    td = document.createElement('td');
+
+    var saveBtn = mxUtils.button(mxResources.get('loadUlearn'), mxUtils.bind(this, function () {
+        // TODO load xml from server and set it here
+    }));
+    saveBtn.className = 'geBtn gePrimaryBtn';
+
+    var cancelBtn = mxUtils.button(mxResources.get('cancel'), function () {
+        editorUi.hideDialog();
+    });
+    cancelBtn.className = 'geBtn';
+
+    if (editorUi.editor.cancelFirst) {
+        td.appendChild(cancelBtn);
+        td.appendChild(saveBtn);
+    } else {
+        td.appendChild(saveBtn);
+        td.appendChild(cancelBtn);
+    }
+
+    row.appendChild(td);
+    tbody.appendChild(row);
+    table.appendChild(tbody);
+    this.container = table;
+};
+
+/**
  * Constructs a new export dialog.
  */
 var ExportDialog = function (editorUi) {
