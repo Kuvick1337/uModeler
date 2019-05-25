@@ -817,6 +817,45 @@ var UlearnSaveDialog = function (editorUi) {
     row.appendChild(td);
 
     tbody.appendChild(row);
+    //================================================
+
+    // create input element user name
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('username') + ':');
+
+    row.appendChild(td);
+
+    var userNameInput = document.createElement('input');
+    userNameInput.setAttribute('type', 'text');
+    userNameInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(userNameInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //===============================================
+
+    // create input element password
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('password') + ':');
+
+    row.appendChild(td);
+
+    var passwordInput = document.createElement('input');
+    passwordInput.setAttribute('type', 'password');
+    passwordInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(passwordInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //===============================================
 
     // create Button row
     row = document.createElement('tr');
@@ -828,15 +867,27 @@ var UlearnSaveDialog = function (editorUi) {
     var saveBtn = mxUtils.button(mxResources.get('saveUlearn'), mxUtils.bind(this, function () {
         console.log("start save to Ulearn Button ")
 
+        var onSuccess = function (req) {
+            mxUtils.prompt(mxResources.get('saveSuccess'));
+        };
+
+        var onError = function (req) {
+            // TODO how to display error message?
+            mxUtils.error(req.getStatus);
+        };
+
         var data = mxUtils.getXml(editorUi.editor.getGraphXml());
         var filename = fileNameInput.value;
         var format = "xml";
+        var loginparams = "&username=" + userNameInput.value + "&password=" + passwordInput.value;
 
         if (data.length < MAX_REQUEST_SIZE) {
             editorUi.hideDialog();
-            var req = new mxXmlRequest(SAVE_URL, 'xml=' + encodeURIComponent(data) + '&filename=' +
-                encodeURIComponent(filename) + '&format=' + format);
-            req.simulate(document, '');
+            var req = new mxXmlRequest(ULEARN_SAVE_URL, 'xml=' + encodeURIComponent(data) + '&filename=' +
+                encodeURIComponent(filename) + '&format=' + format + loginparams);
+            // req.simulate(document, '_blank');
+            req.send(onload(req), onError(req));
+
         } else {
             mxUtils.alert(mxResources.get('drawingTooLarge'));
             mxUtils.popup(xml);
@@ -898,6 +949,45 @@ var UlearnLoadDialog = function (editorUi) {
     row.appendChild(td);
 
     tbody.appendChild(row);
+    //================================================
+
+    // create input element user name
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('username') + ':');
+
+    row.appendChild(td);
+
+    var userNameInput = document.createElement('input');
+    userNameInput.setAttribute('type', 'text');
+    userNameInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(userNameInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //===============================================
+
+    // create input element password
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('password') + ':');
+
+    row.appendChild(td);
+
+    var passwordInput = document.createElement('input');
+    passwordInput.setAttribute('type', 'password');
+    passwordInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(passwordInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //===============================================
 
     // create Button row
     row = document.createElement('tr');
@@ -908,15 +998,33 @@ var UlearnLoadDialog = function (editorUi) {
 
     var loadBtn = mxUtils.button(mxResources.get('loadUlearn'), mxUtils.bind(this, function () {
         // TODO load xml from server and set it here
-        console.log("in here")
+        console.log("uLearn load button pressed");
 
-        // example code taken from mxClient.js:3585
-        mxUtils.get(ULEARN_LOAD_URL, function (req) {
-            console.log("in anonymer funct");
+        onload = function (req) {
+            console.log("in onLoad funct");
             var node = req.getDocumentElement();
             var dec = new mxCodec(node.ownerDocument);
             dec.decode(node, graph.getModel());
-        });
+        };
+
+        onError = function (req) {
+            // TODO how to display error message?
+            mxUtils.error(req.getStatus);
+        };
+
+        var params = "filename=" + fileNameInput.value + "&username=" + userNameInput.value + "&password=" + passwordInput.value;
+        console.log("URL=" + ULEARN_LOAD_URL);
+
+        var req = new mxXmlRequest(ULEARN_LOAD_URL, params, 'GET');
+        req.send(onload(req), onError(req));  // TODO make functions for onTimeout
+
+        // example code taken from mxClient.js:3585
+        // mxUtils.get(ULEARN_LOAD_URL, function (req) {
+        //     console.log("in anonymer funct");
+        //     var node = req.getDocumentElement();
+        //     var dec = new mxCodec(node.ownerDocument);
+        //     dec.decode(node, graph.getModel());
+        // });
     }));
     loadBtn.className = 'geBtn gePrimaryBtn';
 
