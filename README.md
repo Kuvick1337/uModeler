@@ -14,6 +14,11 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
 * jar is build and started on port 8080
 * go to http://localhost:8080/ 
 
+## implemented features
+
+* export as XML/SVG
+* import from XML
+
 ## Todos
 
 * add S-BPM set  
@@ -23,13 +28,6 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
  -> it looks like mxGraph uses XML definitions (assets/stencils/bpmn.xml) and JS-objects to create the UI elements
  -> use "addBpmnPalette" as template for S-BPM elements
 * add remote import/export (uLearn)
-* add local import/export  
- -> https://jgraph.github.io/mxgraph/docs/js-api/files/editor/mxEditor-js.html
- -> maybe an example: https://github.com/jgraph/mxgraph/blob/master/java/examples/com/mxgraph/examples/web/resources/export.html
- -> in Dialog.js werden die Dialoge zusammengebaut (innere Klasse ExportDialog)
- -> import via OpenDialogue should work, but doesn't ??
-* add export as pictures
- -> XML needs to be converted in binary data (picture, e.g. png) 
- -> see Java backend classes mxCodec, mxGraphModel, mxCellRenderer and mxGraph (!!!)
- -> example for PDF Export (probably requires JAR from java/jar folder): https://github.com/jgraph/mxgraph/blob/master/java/examples/com/mxgraph/examples/PdfExport.java
- * add Java Backend as module to the project (better separation than as subfolder)
+ -> can be done as soon as details about REST interfae are known
+* rework URLs in Init.js from localhost to either a dns name (e.g. umodeler.ce.jku.at)
+* rework file menu to desired structure (tbd with Dr. Frysak)
