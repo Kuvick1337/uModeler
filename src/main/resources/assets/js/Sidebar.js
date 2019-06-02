@@ -82,23 +82,26 @@ Sidebar.prototype.init = function()
 	this.addSearchPalette(true);
 	this.addGeneralPalette(false);
 	this.addBpmnPalette(dir, true);
-	this.addSbpmPalette(dir, false);
-	this.addMiscPalette(false);
-	this.addAdvancedPalette(false);
-	this.addBasicPalette(dir);
-	this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
-		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-	this.addUmlPalette(false);
-	this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml',
-		';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
-	this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
-		['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
-		 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
-		 'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
-		 'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
-		 'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
-		 {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
-		  'Router_Icon': 'router switch'});
+	this.addSbpmPalette(dir);
+
+	// this.addMiscPalette(false);
+	// this.addAdvancedPalette(false);
+	// this.addBasicPalette(dir);
+    // this.addStencilPalette('arrows', mxResources.get('arrows'), dir + '/arrows.xml',
+    //  ';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+    // this.addUmlPalette(false);
+	//
+    //  this.addStencilPalette('flowchart', 'Flowchart', dir + '/flowchart.xml',
+	// 	';whiteSpace=wrap;html=1;fillColor=#ffffff;strokeColor=#000000;strokeWidth=2');
+	//
+	// this.addImagePalette('clipart', mxResources.get('clipart'), dir + '/clipart/', '_128x128.png',
+	// 	['Earth_globe', 'Empty_Folder', 'Full_Folder', 'Gear', 'Lock', 'Software', 'Virus', 'Email',
+	// 	 'Database', 'Router_Icon', 'iPad', 'iMac', 'Laptop', 'MacBook', 'Monitor_Tower', 'Printer',
+	// 	 'Server_Tower', 'Workstation', 'Firewall_02', 'Wireless_Router_N', 'Credit_Card',
+	// 	 'Piggy_Bank', 'Graph', 'Safe', 'Shopping_Cart', 'Suit1', 'Suit2', 'Suit3', 'Pilot1',
+	// 	 'Worker1', 'Soldier1', 'Doctor1', 'Tech1', 'Security1', 'Telesales1'], null,
+	// 	 {'Wireless_Router_N': 'wireless router switch wap wifi access point wlan',
+	// 	  'Router_Icon': 'router switch'});
 };
 
 /**
@@ -907,7 +910,7 @@ Sidebar.prototype.addGeneralPalette = function(expand)
 	 	this.createVertexTemplateEntry('text;html=1;strokeColor=none;fillColor=none;spacing=5;spacingTop=-20;whiteSpace=wrap;overflow=hidden;rounded=0;', 190, 120,
 			'<h1>Heading</h1><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>',
 			'Textbox', null, null, 'text textbox textarea'),
- 		this.createVertexTemplateEntry('ellipse;whiteSpace=wrap;html=1;', 120, 80, '', 'Ellipse', null, null, 'oval ellipse state'),
+ 		this.createVertexTemplateEntry('ellipse;whiteSpace=wrap;html=1;', 120, 80, '', 'EcreateVertexTemplateEntryllipse', null, null, 'oval ellipse state'),
 		this.createVertexTemplateEntry('whiteSpace=wrap;html=1;aspect=fixed;', 80, 80, '', 'Square', null, null, 'square'),
 		this.createVertexTemplateEntry('ellipse;whiteSpace=wrap;html=1;aspect=fixed;', 80, 80, '', 'Circle', null, null, 'circle'),
 	 	this.createVertexTemplateEntry('shape=process;whiteSpace=wrap;html=1;backgroundOutline=1;', 120, 60, '', 'Process', null, null, 'process task'),
@@ -1760,31 +1763,77 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
  * Adds the S-BPM library to the sidebar.
  * TODO: add all the S-BPM vertices
  */
-Sidebar.prototype.addSbpmPalette = function (dir, expand) {
+Sidebar.prototype.addSbpmPalette = function (dir) {
 	// Avoids having to bind all functions to "this"
-	var sb = this;
+    var sb = this;
 
-	var fns =
-		[
-			this.addEntry('bpmn message flow', function () {
-				var edge = new mxCell('', new mxGeometry(0, 0, 0, 0), 'startArrow=oval;startFill=0;startSize=7;endArrow=block;endFill=0;endSize=10;dashed=1;html=1;');
-				edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-				edge.geometry.setTerminalPoint(new mxPoint(100, 0), false);
-				edge.geometry.relative = true;
-				edge.edge = true;
+    var fns =
+        [
+            this.createVertexTemplateEntry('swimlane;html=1;collapsible=0;horizontal=1;fontStyle=0;childLayout=stackLayout;startSize=20;', 100, 120, 'Subjekt', 'Subjekt', null, null, 'sbpm subject subjekt'),
+            this.createEdgeTemplateEntry('endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Nachricht oder Bedingung', null, 'sbpm nachricht bedingung'),
+            this.addEntry('sbpm funktion funktionszustand zustand', function()
+            {
+                var cell = new mxCell('Funktionszustand', new mxGeometry(0, 0, 120, 60), 'html=1;whiteSpace=wrap;rounded=0;');
+                cell.vertex = true;
+                //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
+                var cell1 = new mxCell('', new mxGeometry(0.5, 1, 20, 20), 'html=1;shape=sumEllipse;outlineConnect=0;');
+                cell1.vertex = true;
+                cell1.geometry.relative = true;
+                cell1.geometry.offset = new mxPoint(-10, -50);
+                cell.insert(cell1);
 
-				var cell = new mxCell('', new mxGeometry(0, 0, 20, 14), 'shape=message;html=1;outlineConnect=0;');
-				cell.geometry.relative = true;
-				cell.vertex = true;
-				cell.geometry.offset = new mxPoint(-10, -7);
-				edge.insert(cell);
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Funktionszustand');
+            }),
+            this.addEntry('sbpm sende sunktionszustand zustand', function()
+            {
+                var cell = new mxCell('Sendezustand', new mxGeometry(0, 0, 120, 60), 'html=1;whiteSpace=wrap;rounded=0;');
+                cell.vertex = true;
+                //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
+                var cell1 = new mxCell('', new mxGeometry(0.5, 1, 30, 20), 'html=1;shape=triangle;direction=south;outlineConnect=0;');
+                cell1.vertex = true;
+                cell1.geometry.relative = true;
+                cell1.geometry.offset = new mxPoint(-15, -10);
+                cell.insert(cell1);
 
-				return sb.createEdgeTemplateFromCells([edge], 100, 0, 'Message Flow 2');
-			}),
-			this.createEdgeTemplateEntry('shape=link;html=1;', 100, 0, '', 'Link', null, 'bpmn link')
-		];
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Sendezustand');
+            }),
+            this.addEntry('sbpm empfang sunktionszustand zustand', function()
+            {
+                var cell = new mxCell('Empfangszustand', new mxGeometry(0, 0, 120, 60), 'html=1;whiteSpace=wrap;rounded=0;');
+                cell.vertex = true;
+                //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
+                var cell1 = new mxCell('', new mxGeometry(0.5, 1, 30, 20), 'html=1;shape=triangle;direction=south;outlineConnect=0;');
+                cell1.vertex = true;
+                cell1.geometry.relative = true;
+                cell1.geometry.offset = new mxPoint(-15, -70);
+                cell.insert(cell1);
 
-	this.addPaletteFunctions('bpmn', 'S-BPM ' + mxResources.get('general'), false, fns);
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Empfangszustand');
+            }),
+            this.addEntry('sbpm start funktion startzustand zustand', function()
+            {
+                var cell = new mxCell('Startzustand', new mxGeometry(0, 0, 120, 60), 'html=1;whiteSpace=wrap;rounded=0;');
+                cell.vertex = true;
+                //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
+                var cell1 = new mxCell('', new mxGeometry(0.5, 1, 20, 20), 'html=1;shape=sumEllipse;outlineConnect=0;');
+                cell1.vertex = true;
+                cell1.geometry.relative = true;
+                cell1.geometry.offset = new mxPoint(-10, -50);
+                cell.insert(cell1);
+
+                var triangle = new mxCell('', new mxGeometry(0.5, 1, 20, 39), 'html=1;fillColor=#000000;direction=west;shape=triangle;outlineConnect=0;');
+                triangle.vertex = true;
+                triangle.geometry.relative = true;
+                triangle.geometry.offset = new mxPoint(-60, -69);
+                cell.insert(triangle);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Startzustand');
+            })
+        ];
+
+    this.addPaletteFunctions('sbpm', 'S-BPM ' + mxResources.get('general'), false, fns);
+
+
 };
 
 /**
