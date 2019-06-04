@@ -1773,20 +1773,20 @@ Sidebar.prototype.addSbpmPalette = function (dir) {
             this.createEdgeTemplateEntry('endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Nachricht oder Bedingung', null, 'sbpm nachricht bedingung'),
             this.addEntry('sbpm funktion funktionszustand zustand', function()
             {
-                var cell = new mxCell('Funktionszustand', new mxGeometry(0, 0, 120, 60), 'html=1;whiteSpace=wrap;rounded=0;');
+                var cell = new mxCell('Funktionszustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
                 //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
                 var cell1 = new mxCell('', new mxGeometry(0.5, 1, 20, 20), 'html=1;shape=sumEllipse;outlineConnect=0;');
                 cell1.vertex = true;
                 cell1.geometry.relative = true;
-                cell1.geometry.offset = new mxPoint(-10, -50);
+                cell1.geometry.offset = new mxPoint(-10, -65);
                 cell.insert(cell1);
 
                 return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Funktionszustand');
             }),
             this.addEntry('sbpm sende sunktionszustand zustand', function()
             {
-                var cell = new mxCell('Sendezustand', new mxGeometry(0, 0, 120, 60), 'html=1;whiteSpace=wrap;rounded=0;');
+                var cell = new mxCell('Sendezustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
                 //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
                 var cell1 = new mxCell('', new mxGeometry(0.5, 1, 30, 20), 'html=1;shape=triangle;direction=south;outlineConnect=0;');
@@ -1799,35 +1799,55 @@ Sidebar.prototype.addSbpmPalette = function (dir) {
             }),
             this.addEntry('sbpm empfang sunktionszustand zustand', function()
             {
-                var cell = new mxCell('Empfangszustand', new mxGeometry(0, 0, 120, 60), 'html=1;whiteSpace=wrap;rounded=0;');
+                var cell = new mxCell('Empfangszustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
                 //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
                 var cell1 = new mxCell('', new mxGeometry(0.5, 1, 30, 20), 'html=1;shape=triangle;direction=south;outlineConnect=0;');
                 cell1.vertex = true;
                 cell1.geometry.relative = true;
-                cell1.geometry.offset = new mxPoint(-15, -70);
+                cell1.geometry.offset = new mxPoint(-15, -80);
                 cell.insert(cell1);
 
                 return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Empfangszustand');
             }),
             this.addEntry('sbpm start funktion startzustand zustand', function()
             {
-                var cell = new mxCell('Startzustand', new mxGeometry(0, 0, 120, 60), 'html=1;whiteSpace=wrap;rounded=0;');
+                var cell = new mxCell('Startzustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
                 //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
                 var cell1 = new mxCell('', new mxGeometry(0.5, 1, 20, 20), 'html=1;shape=sumEllipse;outlineConnect=0;');
                 cell1.vertex = true;
                 cell1.geometry.relative = true;
-                cell1.geometry.offset = new mxPoint(-10, -50);
+                cell1.geometry.offset = new mxPoint(-10, -65);
                 cell.insert(cell1);
 
-                var triangle = new mxCell('', new mxGeometry(0.5, 1, 20, 39), 'html=1;fillColor=#000000;direction=west;shape=triangle;outlineConnect=0;');
+                var triangle = new mxCell('', new mxGeometry(0.5, 1, 20, 40), 'html=1;fillColor=#000000;direction=west;shape=triangle;outlineConnect=0;rotation=45');
                 triangle.vertex = true;
                 triangle.geometry.relative = true;
-                triangle.geometry.offset = new mxPoint(-60, -69);
+                triangle.geometry.offset = new mxPoint(-62, -82);
+                triangle.g
                 cell.insert(triangle);
 
-                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Startzustand');
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Endzustand');
+            }),
+            this.addEntry('sbpm end funktion endzustand zustand', function()
+            {
+                var cell = new mxCell('Endzustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
+                cell.vertex = true;
+                //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
+                var cell1 = new mxCell('', new mxGeometry(0.5, 1, 20, 20), 'html=1;shape=sumEllipse;outlineConnect=0;');
+                cell1.vertex = true;
+                cell1.geometry.relative = true;
+                cell1.geometry.offset = new mxPoint(-10, -65);
+                cell.insert(cell1);
+
+                var triangle = new mxCell('', new mxGeometry(0.5, 1, 20, 39), 'html=1;fillColor=#000000;direction=west;shape=triangle;outlineConnect=0;rotation=225;');
+                triangle.vertex = true;
+                triangle.geometry.relative = true;
+                triangle.geometry.offset = new mxPoint(42, -27);
+                cell.insert(triangle);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Endzustand');
             })
         ];
 
