@@ -82,7 +82,9 @@ Sidebar.prototype.init = function()
 	this.addSearchPalette(true);
 	this.addGeneralPalette(false);
 	this.addBpmnPalette(dir, true);
-	this.addSbpmPalette(dir);
+	this.addSbpmSIDPalette(dir);
+    this.addSbpmSBDPalette(dir);
+
 
 	// this.addMiscPalette(false);
 	// this.addAdvancedPalette(false);
@@ -1586,11 +1588,11 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 
 	var fns =
 	[
-	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;', 120, 80, 'Task', 'Process', null, null, 'bpmn task process'),
+	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;', 120, 80, 'Task', 'Task', null, null, 'bpmn task aufgabe process'),
 	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;double=1;', 120, 80, 'Transaction', 'Transaction', null, null, 'bpmn transaction'),
-	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;dashed=1;dashPattern=1 4;', 120, 80, 'Event\nSub-Process', 'Event Sub-Process', null, null, 'bpmn event subprocess sub process sub-process'),
-	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;strokeWidth=3;', 120, 80, 'Call Activity', 'Call Activity', null, null, 'bpmn call activity'),
-		this.addEntry('bpmn subprocess sub process sub-process', function()
+	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;dashed=1;dashPattern=1 4;', 120, 80, 'Event\nSub-Process', 'Event Sub-Process', null, null, 'bpmn event subprocess sub process sub-process ereignis teilprozess'),
+	 	this.createVertexTemplateEntry('shape=ext;rounded=1;html=1;whiteSpace=wrap;strokeWidth=3;', 120, 80, 'Call Activity', 'Call Activity', null, null, 'bpmn call activity aufruf aktivität'),
+		this.addEntry('bpmn subprocess sub process sub-process teilprozess', function()
 		{
 			var cell = new mxCell('Sub-Process', new mxGeometry(0, 0, 120, 80), 'html=1;whiteSpace=wrap;rounded=1;');
 			cell.vertex = true;
@@ -1760,22 +1762,34 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 };
 
 /**
- * Adds the S-BPM library to the sidebar.
- * TODO: add all the S-BPM vertices
+ * Adds the S-BPM SID library to the sidebar.
  */
-Sidebar.prototype.addSbpmPalette = function (dir) {
+Sidebar.prototype.addSbpmSIDPalette = function (dir) {
 	// Avoids having to bind all functions to "this"
     var sb = this;
 
     var fns =
         [
             this.createVertexTemplateEntry('swimlane;html=1;collapsible=0;horizontal=1;fontStyle=0;childLayout=stackLayout;startSize=20;', 100, 120, 'Subjekt', 'Subjekt', null, null, 'sbpm subject subjekt'),
+            this.createEdgeTemplateEntry('endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Nachricht oder Bedingung', null, 'sbpm nachricht bedingung')
+        ]
+    this.addPaletteFunctions('sbpm', 'S-BPM SID' , false, fns);
+};
+
+/**
+ * Adds the S-BPM SBD library to the sidebar.
+ */
+Sidebar.prototype.addSbpmSBDPalette = function (dir) {
+    // Avoids having to bind all functions to "this"
+    var sb = this;
+
+    var fns =
+        [
             this.createEdgeTemplateEntry('endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Nachricht oder Bedingung', null, 'sbpm nachricht bedingung'),
             this.addEntry('sbpm funktion funktionszustand zustand', function()
             {
                 var cell = new mxCell('Funktionszustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
-                //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
                 var cell1 = new mxCell('', new mxGeometry(0.5, 1, 20, 20), 'html=1;shape=sumEllipse;outlineConnect=0;');
                 cell1.vertex = true;
                 cell1.geometry.relative = true;
@@ -1784,7 +1798,7 @@ Sidebar.prototype.addSbpmPalette = function (dir) {
 
                 return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Funktionszustand');
             }),
-            this.addEntry('sbpm sende sunktionszustand zustand', function()
+            this.addEntry('sbpm sende sendezustand zustand', function()
             {
                 var cell = new mxCell('Sendezustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
@@ -1797,7 +1811,7 @@ Sidebar.prototype.addSbpmPalette = function (dir) {
 
                 return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Sendezustand');
             }),
-            this.addEntry('sbpm empfang sunktionszustand zustand', function()
+            this.addEntry('sbpm empfang empfangszustand zustand', function()
             {
                 var cell = new mxCell('Empfangszustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
@@ -1810,7 +1824,7 @@ Sidebar.prototype.addSbpmPalette = function (dir) {
 
                 return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Empfangszustand');
             }),
-            this.addEntry('sbpm start funktion startzustand zustand', function()
+            this.addEntry('sbpm start funktion startzustand startfunktionszustand zustand', function()
             {
                 var cell = new mxCell('Startzustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
@@ -1830,7 +1844,29 @@ Sidebar.prototype.addSbpmPalette = function (dir) {
 
                 return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Endzustand');
             }),
-            this.addEntry('sbpm end funktion endzustand zustand', function()
+
+            this.addEntry('sbpm start empfang startzustand startempfangszustand zustand', function()
+            {
+                var cell = new mxCell('Startzustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
+                cell.vertex = true;
+                //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
+                var cell1 = new mxCell('', new mxGeometry(0.5, 1, 30, 20), 'html=1;shape=triangle;direction=south;outlineConnect=0;');
+                cell1.vertex = true;
+                cell1.geometry.relative = true;
+                cell1.geometry.offset = new mxPoint(-15, -80);
+                cell.insert(cell1);
+
+                var triangle = new mxCell('', new mxGeometry(0.5, 1, 20, 40), 'html=1;fillColor=#000000;direction=west;shape=triangle;outlineConnect=0;rotation=45');
+                triangle.vertex = true;
+                triangle.geometry.relative = true;
+                triangle.geometry.offset = new mxPoint(-62, -82);
+                triangle.g
+                cell.insert(triangle);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Endzustand');
+            }),
+
+            this.addEntry('sbpm end funktion endfunktionszustand zustand', function()
             {
                 var cell = new mxCell('Endzustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
                 cell.vertex = true;
@@ -1848,12 +1884,30 @@ Sidebar.prototype.addSbpmPalette = function (dir) {
                 cell.insert(triangle);
 
                 return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Endzustand');
+            }),
+
+            this.addEntry('sbpm end sende endsende endsendezustand zustand', function()
+            {
+                var cell = new mxCell('Endzustand', new mxGeometry(0, 0, 120, 70), 'html=1;whiteSpace=wrap;rounded=0;');
+                cell.vertex = true;
+                //this.createVertexTemplateEntry('shape=orEllipse;perimeter=ellipsePerimeter;whiteSpace=wrap;html=1;backgroundOutline=1;', 80, 80, '', 'Or', null, null, 'or circle oval ellipse'),
+                var cell1 = new mxCell('', new mxGeometry(0.5, 1, 30, 20), 'html=1;shape=triangle;direction=south;outlineConnect=0;');
+                cell1.vertex = true;
+                cell1.geometry.relative = true;
+                cell1.geometry.offset = new mxPoint(-15, -10);
+                cell.insert(cell1);
+
+                var triangle = new mxCell('', new mxGeometry(0.5, 1, 20, 39), 'html=1;fillColor=#000000;direction=west;shape=triangle;outlineConnect=0;rotation=225;');
+                triangle.vertex = true;
+                triangle.geometry.relative = true;
+                triangle.geometry.offset = new mxPoint(42, -27);
+                cell.insert(triangle);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Endzustand');
             })
         ];
 
-    this.addPaletteFunctions('sbpm', 'S-BPM ' + mxResources.get('general'), false, fns);
-
-
+    this.addPaletteFunctions('sbpm', 'S-BPM SBD', false, fns);
 };
 
 /**
