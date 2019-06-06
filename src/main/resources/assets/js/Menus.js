@@ -408,8 +408,13 @@ Menus.prototype.init = function () {
         this.addMenuItems(menu, ['-', 'fitWindow', 'fitPageWidth', 'fitPage', 'fitTwoPages', '-', 'customZoom'], parent);
     })));
 
+    // this.put('file', new Menu(mxUtils.bind(this, function (menu, parent) {
+    //     this.addMenuItems(menu, ['new', 'open', '-', 'save', 'saveAs', '-', 'import', 'export', '-', 'saveUlearn', 'loadUlearn', '-', 'pageSetup', 'print'], parent);
+    // })));
+
+    // custom styled file menu
     this.put('file', new Menu(mxUtils.bind(this, function (menu, parent) {
-        this.addMenuItems(menu, ['new', 'open', '-', 'save', 'saveAs', '-', 'import', 'export', '-', 'saveUlearn', 'loadUlearn', '-', 'pageSetup', 'print'], parent);
+        this.addMenuItems(menu, ['new', 'open', 'loadUlearn', '-', 'save', 'saveUlearn', '-', 'export', '-', 'import'], parent);
     })));
 
     this.put('edit', new Menu(mxUtils.bind(this, function (menu, parent) {
