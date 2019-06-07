@@ -68,6 +68,15 @@ Actions.prototype.init = function () {
         ui.showDialog(new ExportDialog(ui).container, 300, 230, true, true);
     });
 
+    // custom menu actions for custom file menu
+    this.addAction('openfilen', function () {
+        window.openNew = false;
+        window.openKey = 'openfilen';
+
+        ui.openFile();
+    });
+
+
     // fpfei: custom actions for saving to and loading from uLearn
     this.addAction('saveUlearn...', function () {
         ui.showDialog(new UlearnSaveDialog(ui).container, 300, 230, true, true);
