@@ -82,6 +82,10 @@ Sidebar.prototype.init = function()
 	this.addSearchPalette(true);
 	this.addGeneralPalette(false);
 	this.addBpmnPalette(dir, true);
+	this.addBpmnEventPalette(dir, true);
+	this.addBpmnSwimlanesPalette(dir, true);
+	this.addBpmnMessagePalette(dir, true);
+	this.addBpmnGatewayPalette(dir, true);
 	this.addSbpmSIDPalette(dir);
     this.addSbpmSBDPalette(dir);
 
@@ -1735,30 +1739,125 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 		this.createVertexTemplateEntry('html=1;shape=mxgraph.flowchart.annotation_2;align=left;', 50, 100, '', 'Annotation', null, null, this.getTagsForStencil('bpmn', 'annotation_1', 'bpmn business process model ').join(' ')),
 		this.createVertexTemplateEntry('rounded=1;arcSize=10;dashed=1;strokeColor=#000000;fillColor=none;gradientColor=none;dashPattern=8 3 1 3;strokeWidth=2;',
 				 200, 200, '', 'Group', null, null, this.getTagsForStencil('bpmn', 'group', 'bpmn business process model ').join(' ')),
-	 	this.createEdgeTemplateEntry('endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Sequence Flow', null, 'bpmn sequence flow'),
-	 	this.createEdgeTemplateEntry('startArrow=dash;startSize=8;endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Default Flow', null, 'bpmn default flow'),
-	 	this.createEdgeTemplateEntry('startArrow=diamondThin;startFill=0;startSize=14;endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Conditional Flow', null, 'bpmn conditional flow'),
-	 	this.createEdgeTemplateEntry('startArrow=oval;startFill=0;startSize=7;endArrow=block;endFill=0;endSize=10;dashed=1;html=1;', 100, 0, '', 'Message Flow 1', null, 'bpmn message flow'),
-		this.addEntry('bpmn message flow', function()
-		{
-			var edge = new mxCell('', new mxGeometry(0, 0, 0, 0), 'startArrow=oval;startFill=0;startSize=7;endArrow=block;endFill=0;endSize=10;dashed=1;html=1;');
-			edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
-			edge.geometry.setTerminalPoint(new mxPoint(100, 0), false);
-			edge.geometry.relative = true;
-			edge.edge = true;
-			
-	    	var cell = new mxCell('', new mxGeometry(0, 0, 20, 14), 'shape=message;html=1;outlineConnect=0;');
-	    	cell.geometry.relative = true;
-	    	cell.vertex = true;
-	    	cell.geometry.offset = new mxPoint(-10, -7);
-	    	edge.insert(cell);
 
-			return sb.createEdgeTemplateFromCells([edge], 100, 0, 'Message Flow 2');
-		}),
-		this.createEdgeTemplateEntry('shape=link;html=1;', 100, 0, '', 'Link', null, 'bpmn link')
+		this.createEdgeTemplateEntry('shape=link;html=1;', 100, 0, '', 'Kommunikationslink', null, 'bpmn link')
 	];
 	
 	this.addPaletteFunctions('bpmn', 'BPMN ' + mxResources.get('general'), false, fns);
+};
+
+/**
+ * Adds the BPMN Swimlanes library to the sidebar.
+ */
+Sidebar.prototype.addBpmnSwimlanesPalette = function(dir, expand)
+{
+    // Avoids having to bind all functions to "this"
+    var sb = this;
+
+    var fns =
+        [
+            this.createVertexTemplateEntry('swimlane;html=1;horizontal=0;startSize=20;', 320, 240, 'Pool', 'Pool', null, null, 'bpmn pool'),
+            this.createVertexTemplateEntry('swimlane;html=1;horizontal=0;swimlaneLine=0;', 300, 120, 'Lane', 'Lane', null, null, 'bpmn lane')
+        ];
+
+    this.addPaletteFunctions('bpmn', 'BPMN Swimlane', false, fns);
+};
+
+/**
+ * Adds the BPMN Messages library to the sidebar.
+ */
+Sidebar.prototype.addBpmnMessagePalette = function(dir, expand)
+{
+    // Avoids having to bind all functions to "this"
+    var sb = this;
+
+    var fns =
+        [
+            this.createEdgeTemplateEntry('endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Sequence Flow', null, 'bpmn sequence flow'),
+            this.createEdgeTemplateEntry('startArrow=dash;startSize=8;endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Default Flow', null, 'bpmn default flow'),
+            this.createEdgeTemplateEntry('startArrow=diamondThin;startFill=0;startSize=14;endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Conditional Flow', null, 'bpmn conditional flow'),
+            this.createEdgeTemplateEntry('startArrow=oval;startFill=0;startSize=7;endArrow=block;endFill=0;endSize=10;dashed=1;html=1;', 100, 0, '', 'Message Flow 1', null, 'bpmn message flow'),
+            this.addEntry('bpmn message flow', function()
+            {
+                var edge = new mxCell('', new mxGeometry(0, 0, 0, 0), 'startArrow=oval;startFill=0;startSize=7;endArrow=block;endFill=0;endSize=10;dashed=1;html=1;');
+                edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+                edge.geometry.setTerminalPoint(new mxPoint(100, 0), false);
+                edge.geometry.relative = true;
+                edge.edge = true;
+
+                var cell = new mxCell('', new mxGeometry(0, 0, 20, 14), 'shape=message;html=1;outlineConnect=0;');
+                cell.geometry.relative = true;
+                cell.vertex = true;
+                cell.geometry.offset = new mxPoint(-10, -7);
+                edge.insert(cell);
+
+                return sb.createEdgeTemplateFromCells([edge], 100, 0, 'Message Flow 2');
+            })
+        ];
+
+    this.addPaletteFunctions('bpmn', 'BPMN Message', false, fns);
+};
+
+/**
+ * Adds the BPMN Events library to the sidebar.
+ */
+Sidebar.prototype.addBpmnEventPalette = function(dir, expand)
+{
+    // Avoids having to bind all functions to "this"
+    var sb = this;
+
+    var fns =
+        [
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis', null, null, 'start general event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis', null, null, 'general event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis', null, null, 'end general event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Nachricht', null, null, 'start nachricht message event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Nachricht', null, null, 'nachricht message event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Nachricht', null, null, 'end message nachricht event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Zeit', null, null, 'start zeit timer event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Zeit', null, null, 'zeit timer event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;strokeWidth=2', 55, 55, '', 'Endereignis Zeit', null, null, 'end zeit timer event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.rule_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Bedingung', null, null, 'start bedingung rule event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.rule_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Bedingung', null, null, 'bedingung rule event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.link_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Link', null, null, 'start link event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.link_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Link', null, null, 'link event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.link_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;strokeWidth=2', 55, 55, '', 'Endereignis Link', null, null, 'end link event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.error_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Kompensation', null, null, 'kompensation compensation event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.error_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Kompensation', null, null, 'end kompensation compensation event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.cancel_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Abbruch', null, null, 'abbruch cancel event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.cancel_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Abbruch', null, null, 'end abbruch cancel event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Kompensation', null, null, 'kompensation compensation event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Kompensation', null, null, 'end kompensation compensation event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Mehrfach', null, null, 'start mehrfach multiple event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_instances;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Instanzereignis Mehrfach', null, null, 'mehrfach multiple event instanzereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Mehrfach', null, null, 'mehrfach multiple event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Mehrfach', null, null, 'end mehrfach multiple event ereignis')
+
+
+        ];
+
+    this.addPaletteFunctions('bpmn', 'BPMN Event', false, fns);
+};
+
+/**
+ * Adds the BPMN Gateway library to the sidebar.
+ */
+Sidebar.prototype.addBpmnGatewayPalette = function(dir, expand)
+{
+    // Avoids having to bind all functions to "this"
+    var sb = this;
+
+    var fns =
+        [
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'exklusives Gateway', null, null, 'exklusives Gateway exclusive'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_xor_(data);html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'exklusives Gateway', null, null, 'exklusives Gateway exclusive'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_xor_(event);html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'ereignis-basiertes Gateway', null, null, 'ergeignis-basiertes Gateway '),
+			this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_and;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'paralleles Gateway', null, null, 'paralleles Gateway parallel'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_or;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'inklusives Gateway', null, null, 'inklusives Gateway inclusive'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_complex;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'komplexes Gateway', null, null, 'komplexes Gateway komplex')
+        ];
+
+    this.addPaletteFunctions('bpmn', 'BPMN Gateway', false, fns);
 };
 
 /**
