@@ -809,6 +809,7 @@ var UlearnSaveDialog = function (editorUi) {
     row.appendChild(td);
 
     var fileNameInput = document.createElement('input');
+    fileNameInput.value = "fileName";
     fileNameInput.setAttribute('type', 'text');
     fileNameInput.style.width = '180px';
 
@@ -828,6 +829,7 @@ var UlearnSaveDialog = function (editorUi) {
     row.appendChild(td);
 
     var userNameInput = document.createElement('input');
+    userNameInput.value = "Franz.Pfeiler";
     userNameInput.setAttribute('type', 'text');
     userNameInput.style.width = '180px';
 
@@ -847,6 +849,7 @@ var UlearnSaveDialog = function (editorUi) {
     row.appendChild(td);
 
     var passwordInput = document.createElement('input');
+    passwordInput.value = "asdf";
     passwordInput.setAttribute('type', 'password');
     passwordInput.style.width = '180px';
 
@@ -868,7 +871,7 @@ var UlearnSaveDialog = function (editorUi) {
         console.log("start save to Ulearn Button ")
 
         var onSuccess = function (req) {
-            mxUtils.prompt(mxResources.get('saveSuccess'));
+            //mxUtils.confirm(mxResources.get('saveSuccess'));
         };
 
         var onError = function (req) {
@@ -886,7 +889,7 @@ var UlearnSaveDialog = function (editorUi) {
             var req = new mxXmlRequest(ULEARN_SAVE_URL, 'xml=' + encodeURIComponent(data) + '&filename=' +
                 encodeURIComponent(filename) + '&format=' + format + loginparams);
             // req.simulate(document, '_blank');
-            req.send(onload(req), onError(req));
+            req.send(onSuccess(req), onError(req));
 
         } else {
             mxUtils.alert(mxResources.get('drawingTooLarge'));

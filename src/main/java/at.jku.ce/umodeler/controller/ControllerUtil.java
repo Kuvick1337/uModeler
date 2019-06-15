@@ -84,9 +84,10 @@ public class ControllerUtil {
      *
      * @param request
      * @param response
+     * @return the xml
      * @throws IOException
      */
-    public static void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
+    public static String handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         if (request.getContentLength() < Constants.MAX_REQUEST_SIZE) {
             String mime = request.getParameter("mime");
             String filename = request.getParameter("filename");
@@ -186,8 +187,10 @@ public class ControllerUtil {
                 e.printStackTrace();
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             }
+            return xml;
         } else {
             response.setStatus(HttpServletResponse.SC_REQUEST_ENTITY_TOO_LARGE);
         }
+        return null;
     }
 }
