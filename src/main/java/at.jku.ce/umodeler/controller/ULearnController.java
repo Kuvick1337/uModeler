@@ -2,20 +2,17 @@ package at.jku.ce.umodeler.controller;
 
 import at.jku.ce.umodeler.LoggingRequestInterceptor;
 import at.jku.ce.umodeler.Pair;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import at.jku.ce.umodeler.dto.AuthDto;
+import at.jku.ce.umodeler.dto.ListResponseDto;
+import at.jku.ce.umodeler.dto.LoginResponseDto;
+import at.jku.ce.umodeler.dto.SubmissionsResponseDto;
 import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
 import org.springframework.http.client.BufferingClientHttpRequestFactory;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
-import org.springframework.stereotype.Controller;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -24,13 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import javax.print.attribute.HashAttributeSet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.ws.Response;
 import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -38,73 +31,21 @@ import java.util.stream.Collectors;
 
 @RestController
 public class ULearnController {
-    private final static String BASE_PATH = "https://dev.ce.jku.at/api/service/";
-    private ObjectMapper objectMapper = new ObjectMapper();
+    private final static String ULEARN_BASE_PATH = "https://dev.ce.jku.at/api/service/";
+    private final static String ULEARN_LOGIN = ULEARN_BASE_PATH + "login";
+
+    private final static String ULEARN_WORKSPACE_LIST = ULEARN_BASE_PATH + "api/workspace/list";
 
     public ULearnController() {
-        System.out.println("controller initialized");
+        System.out.println("ULearnController initialized");
     }
-
-    @Data
-    @AllArgsConstructor
-    @NoArgsConstructor
-    public static class Auth {
-        private String password;
-        private String userName;
-
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @Data
-    public static class ResponseId {
-        private long created;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @Data
-    public static class LoginResponse {
-        @Data
-        public static class LoginData {
-            private ResponseId id;
-        }
-        private LoginData data;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @Data
-    public static class ListResponse {
-        @Data
-        public static class ListData {
-            private ResponseId id;
-            private String name;
-        }
-
-        private List<ListData> data;
-    }
-
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    @Data
-    public static class SubmissionsResponse {
-        @Data
-        public static class SubmissionData {
-            @Data
-            public static class SubmissionMember {
-                private ResponseId id;
-            }
-            ResponseId id;
-            List<SubmissionMember> members;
-        }
-
-        List<SubmissionData> data;
-    }
-
 
     @PostMapping("ulearn/save")
     public void postModelToUlearn(HttpServletRequest request, HttpEntity<String> httpEntity, HttpServletResponse response) throws Exception {
-        System.out.println("Post ulearn/save called!");
 
-
-        Map<String, String> values = Arrays.stream(httpEntity.getBody().split("&")).map(entity -> {
+        // split all request parameters into a map
+        Map<String, String> requestParameters = Arrays.stream(Objects.requireNonNull(httpEntity.getBody())
+                .split("&")).map(entity -> {
             String[] result = entity.split("=");
             try {
                 return new Pair<>(result[0], URLDecoder.decode(result.length == 1 ? "NaN" : result[1], StandardCharsets.UTF_8.toString()));
@@ -113,116 +54,101 @@ public class ULearnController {
             }
         }).filter(Objects::nonNull).collect(Collectors.toMap(Pair::getFst, Pair::getSnd));
 
-        URL url = new URL(BASE_PATH + " /login");
-        HttpURLConnection con = (HttpURLConnection) url.openConnection();
-        con.setRequestMethod("GET");
-        String message = con.getResponseMessage();
+        String fileName = requestParameters.getOrDefault("filename", "newFile.xml");
 
-        Pair<List<String>, LoginResponse> loginResponse = login(values);
+
+        // Step 1: perform login to uLearn
+        Pair<List<String>, LoginResponseDto> loginResponse = login(requestParameters);
         loginResponse.getFst().forEach(System.out::println);
         String bearerToken = loginResponse.getFst().get(0);
-        long userId = loginResponse.getSnd().data.id.created;
 
+        // Step 2: fetch workspaces and find ID of correct one
+        ListResponseDto workspaces = fetchWorkspace(bearerToken);
 
-        ListResponse workspaces = fetchWorkspace(bearerToken);
-        long workspaceId = workspaces.data.get(0).id.created;
+        // TODO filter through and find right workspace
+        long workspaceId = workspaces.getData().get(0).getId().getCreated();
 
-        SubmissionsResponse submissionResponse = fetchSubmissions(bearerToken, workspaceId);
+        // Step 3: fetch all submissions and find ID of correct one
+        SubmissionsResponseDto submissionResponse = fetchSubmissions(bearerToken, workspaceId);
+        // TODO filter through and find right submission
 
-        doSubmission(bearerToken, submissionResponse.data.get(0).id.created, submissionResponse.data.get(0).members.get(0).id.created, values.get("xml"));
+        // Step 4: perform submission
+        doSubmission(bearerToken, submissionResponse.getData().get(0).getId().getCreated(),
+                submissionResponse.getData().get(0).getMembers().get(0).getId().getCreated(), requestParameters.get("xml"), fileName);
 
+        response.setStatus(200);
         ControllerUtil.handleRequest(request, response);
     }
 
-
-
-    private Pair<List<String>, LoginResponse> login(Map<String, String> values) throws JsonProcessingException {
+    private Pair<List<String>, LoginResponseDto> login(Map<String, String> values) {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
-        HttpEntity<Auth> entity = new HttpEntity<Auth>(new Auth(values.get("password"), values.get("username")), headers);
-        ResponseEntity<LoginResponse> result = restTemplate.exchange(BASE_PATH + "login", HttpMethod.POST, entity, LoginResponse.class);
-
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
+        HttpEntity<AuthDto> entity = new HttpEntity<>(new AuthDto(values.get("username"), values.get("password")), headers);
+        ResponseEntity<LoginResponseDto> result = restTemplate.exchange(ULEARN_LOGIN, HttpMethod.POST, entity, LoginResponseDto.class);
 
         return new Pair<>(result.getHeaders().get("Authorization"), result.getBody());
     }
 
-
-    private ListResponse fetchWorkspace(String bearerToken) throws JsonProcessingException {
+    private ListResponseDto fetchWorkspace(String bearerToken) {
         RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", bearerToken);
         HttpEntity<String> entity = new HttpEntity<String>("", headers);
-        ResponseEntity<ListResponse> result = restTemplate.exchange(BASE_PATH + "api/workspace/list", HttpMethod.GET, entity, ListResponse.class);
-
+        ResponseEntity<ListResponseDto> result = restTemplate.exchange(ULEARN_WORKSPACE_LIST, HttpMethod.GET, entity, ListResponseDto.class);
 
         return result.getBody();
     }
 
-
-
-
-    private SubmissionsResponse fetchSubmissions(String bearerToken, long workspaceId) throws JsonProcessingException {
+    private SubmissionsResponseDto fetchSubmissions(String bearerToken, long workspaceId) throws JsonProcessingException {
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", bearerToken);
         HttpEntity<String> entity = new HttpEntity<String>("", headers);
-        ResponseEntity<SubmissionsResponse> result = restTemplate.exchange(BASE_PATH + "api/submission-specification-group/workspace:" + workspaceId + " ?global=false", HttpMethod.GET, entity, SubmissionsResponse.class);
+        ResponseEntity<SubmissionsResponseDto> result = restTemplate.exchange(ULEARN_BASE_PATH + "api/submission-specification-group/workspace:" + workspaceId + " ?global=false", HttpMethod.GET, entity, SubmissionsResponseDto.class);
         return result.getBody();
     }
 
-    //api/submission-specification-group/workspace:1560323415584?global=false
-
-
-
-    private void doSubmission(String bearerToken, long groupId, long submissionSpecId, String xml) throws UnsupportedEncodingException {
+    private void doSubmission(String bearerToken, long groupId, long submissionSpecId, String xml, String fileName) {
+        // this interceptor is added to log the sent requests onto the command line --> very useful for debugging!
         RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
         interceptors.add(new LoggingRequestInterceptor());
         restTemplate.setInterceptors(interceptors);
 
         HttpHeaders headers = new HttpHeaders();
-        headers.setAccept(Arrays.asList(MediaType.APPLICATION_JSON));
+        headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
         headers.set("Authorization", bearerToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
-        //headers.setContentDispositionFormData("file", "newFile.xml");
         MultiValueMap<String, Object> bodyData = new LinkedMultiValueMap<>();
-        bodyData.add("fileName", "newFile.xml");
+        bodyData.add("fileName", fileName);
 
 
-        Resource xmlFile = new ByteArrayResource(xml.getBytes("UTF-8")){
+        Resource xmlFile = new ByteArrayResource(xml.getBytes(StandardCharsets.UTF_8)) {
             @Override
-            public String getFilename(){
-                return "newFile.xml";
+            public String getFilename() {
+                return fileName;
             }
         };
+
         HttpHeaders xmlHeaders = new HttpHeaders();
         xmlHeaders.setContentType(MediaType.APPLICATION_XML);
-        HttpEntity<Resource> xmlEntity = new HttpEntity<Resource>(xmlFile, xmlHeaders);
+        HttpEntity<Resource> xmlEntity = new HttpEntity<>(xmlFile, xmlHeaders);
 
         bodyData.add("file", xmlEntity);
         System.out.println("reloaded");
-        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<MultiValueMap<String, Object>>(bodyData, headers);
-        groupId = 1560362317642L;
-        String url = BASE_PATH + "api/submission/group:" + groupId + "/submission-specification:" + submissionSpecId;
+        HttpEntity<MultiValueMap<String, Object>> entity = new HttpEntity<>(bodyData, headers);
+        String url = ULEARN_BASE_PATH + "api/submission/group:" + groupId + "/submission-specification:" + submissionSpecId;
         System.out.println("url: " + url);
 
         ResponseEntity<Object> result = restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class);
         //return result.getBody();
     }
-
-
-
-
-
-    //https://dev.ce.jku.at/api/service/api/submission/group:1560362317642/submission-specification:1560610097235
-
-
 
     @GetMapping("/ulearn/load")
     public void loadModelFromULearn(@RequestParam(name = "filename") String filename,

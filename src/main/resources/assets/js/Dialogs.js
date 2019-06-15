@@ -868,15 +868,18 @@ var UlearnSaveDialog = function (editorUi) {
     td.colSpan = 2;
 
     var saveBtn = mxUtils.button(mxResources.get('saveUlearn'), mxUtils.bind(this, function () {
-        console.log("start save to Ulearn Button ")
-
-        var onSuccess = function (req) {
-            //mxUtils.confirm(mxResources.get('saveSuccess'));
+        // console.log("start save to Ulearn Button ")
+        var onLoad = function (req) {
+            mxUtils.confirm(mxResources.get('saveSuccess'));
         };
 
         var onError = function (req) {
             // TODO how to display error message?
-            mxUtils.error(req.getStatus);
+            mxUtils.error("Fehler beim Speichern!" + req.getStatus, 200, true);
+        };
+
+        var onTimeout = function (req) {
+            mxUtils.error("Timeout! uLearn derzeit nicht verfügbar?" + req.getStatus);
         };
 
         var data = mxUtils.getXml(editorUi.editor.getGraphXml());
@@ -889,7 +892,7 @@ var UlearnSaveDialog = function (editorUi) {
             var req = new mxXmlRequest(ULEARN_SAVE_URL, 'xml=' + encodeURIComponent(data) + '&filename=' +
                 encodeURIComponent(filename) + '&format=' + format + loginparams);
             // req.simulate(document, '_blank');
-            req.send(onSuccess(req), onError(req));
+            req.send(onLoad(req), onError(req));
 
         } else {
             mxUtils.alert(mxResources.get('drawingTooLarge'));

@@ -8,6 +8,10 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
 * update the Gradle project (syncs and installs all needed libraries)
 * optional: set correct Java version (if the installed differs from project setup)
 * start run configuration "Application" to start the spring server locally
+* if the connection to uLearn fails due to SSL handshake errors, perform the following steps:
+1) download the Java Cryptography Extension (JCE) Unlimited Strength Jurisdiction Policy Files (https://www.oracle.com/technetwork/java/javase/downloads/jce8-download-2133166.html)
+2) copy the JAR-Files to $JAVA_HOME/jre/lib/security
+3) restart server
 
 ## run locally
 
@@ -20,13 +24,14 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
 * export as XML/SVG
 * import from XML
 * rework file menu to desired structure
+* save to uLearn
 
 
 ## Todos
 
-* rework S-BPM set to SID/SBD 
-* add remote import/export to uLearn (can be done as soon as details about REST interfae are known)
-* rework URLs in Init.js from localhost to either a dns name (e.g. umodeler.ce.jku.at)
+* add remote import from uLearn (can be done as soon as details about REST interfae are known)
+* rework URLs in Init.js from localhost to a DNS name (e.g. umodeler.ce.jku.at)
+* after save to uLearn the onError dialogue appears. What must the response look like to make it ok?
 
 # Documentation
 
@@ -54,4 +59,4 @@ The backend is a Java REST-Server powered by [Spring](https://spring.io/). The p
 * _IndexController_: delivers the modeler application. Thymeleaf is used to simply refer to the _index.html_ file.
 * _ExportController_: converts the model sent by the frontend to a SVG file and sends it back to the client to download.
 * _SaveController_: converts the model sent by the frontend to a pure XML file and sends it back to the client to download.
-* _uLearnController_: handels loading and storing to uLearn
+* _uLearnController_: handels loading and storing to uLearn  TODO 
