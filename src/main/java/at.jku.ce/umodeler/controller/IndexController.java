@@ -15,4 +15,8 @@ public class IndexController {
         return "../index.html";
     }
 
+//    @GetMapping ("/favicon.ico")
+//    public String favicon() {
+//        return "../favicon.ico";
+//    }
 }

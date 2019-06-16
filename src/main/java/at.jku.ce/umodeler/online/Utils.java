@@ -4,19 +4,12 @@
  */
 package at.jku.ce.umodeler.online;
 
-import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.zip.Deflater;
 import java.util.zip.Inflater;
 import java.util.zip.InflaterInputStream;
 
-//import com.mxgraph.model.mxGeometry;
-//import com.mxgraph.util.mxPoint;
 
 /**
  * String/byte array encoding/manipulation utilities
@@ -75,7 +68,7 @@ public class Utils {
      */
     public static byte[] deflate(String inString) throws IOException {
         Deflater deflater = new Deflater(Deflater.DEFAULT_COMPRESSION, true);
-        byte[] inBytes = inString.getBytes("UTF-8");
+        byte[] inBytes = inString.getBytes(StandardCharsets.UTF_8);
         deflater.setInput(inBytes);
 
         ByteArrayOutputStream outputStream = new ByteArrayOutputStream(
@@ -89,9 +82,7 @@ public class Utils {
         }
 
         outputStream.close();
-        byte[] output = outputStream.toByteArray();
-
-        return output;
+        return outputStream.toByteArray();
     }
 
     /**
@@ -145,26 +136,6 @@ public class Utils {
 
         return result.toString();
     }
-
-
-    /**
-     * Rotates the given geometry (in place) by the given rotation (in degrees).
-     */
-//	public static void rotatedGeometry(mxGeometry geo, double rotation,
-//			double cx, double cy)
-//	{
-//		rotation = Math.toRadians(rotation);
-//		double cos = Math.cos(rotation), sin = Math.sin(rotation);
-//
-//		double x = geo.getCenterX() - cx;
-//		double y = geo.getCenterY() - cy;
-//
-//		double x1 = x * cos - y * sin;
-//		double y1 = y * cos + x * sin;
-//
-//		geo.setX(Math.round(x1 + cx - geo.getWidth() / 2));
-//		geo.setY(Math.round(y1 + cy - geo.getHeight() / 2));
-//	}
 
     /**
      * Checks the file type of an input stream and returns the
@@ -289,12 +260,10 @@ public class Utils {
                     valid = true;
                 }
 
-                /**
-                 * File format used by digital cameras to store images.
-                 * Exif Format can be read by any application supporting
-                 * JPEG. Exif Spec can be found at:
-                 * http://www.pima.net/standards/it10/PIMA15740/Exif_2-1.PDF
-                 */
+                // File format used by digital cameras to store images.
+                // Exif Format can be read by any application supporting
+                // JPEG. Exif Spec can be found at:
+                // http://www.pima.net/standards/it10/PIMA15740/Exif_2-1.PDF
                 if ((c4 == 0xE1) && (c7 == 'E' && c8 == 'x' && c9 == 'i'
                         && c10 == 'f' && c11 == 0)) {
                     valid = true;
@@ -376,5 +345,4 @@ public class Utils {
 
         return head;
     }
-
 }

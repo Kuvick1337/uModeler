@@ -12,12 +12,14 @@ public class SubmissionsResponseDto {
 
     @Data
     public static class SubmissionData {
-        ResponseId id;
+        ULearnObjectId id;
+        String name;
         List<SubmissionMember> members;
 
         @Data
         public static class SubmissionMember {
-            private ResponseId id;
+            private ULearnObjectId id;
+            private String name;
         }
     }
 }

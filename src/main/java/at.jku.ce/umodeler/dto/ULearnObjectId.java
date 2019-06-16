@@ -5,11 +5,8 @@ import lombok.Data;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class LoginResponseDto {
-    private LoginData data;
-
-    @Data
-    public static class LoginData {
-        private ResponseId id;
-    }
+public class ULearnObjectId {
+    private String type;
+    private long created;
+    private int sequence;
 }

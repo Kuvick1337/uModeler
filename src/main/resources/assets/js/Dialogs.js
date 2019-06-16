@@ -782,6 +782,313 @@ var EditDiagramDialog = function (editorUi) {
  */
 EditDiagramDialog.showNewWindowOption = true;
 
+var UlearnLoginDialog = function (editorUi) {
+    var graph = editorUi.editor.graph;
+    var bounds = graph.getGraphBounds();
+    var scale = graph.view.scale;
+
+    var width = Math.ceil(bounds.width / scale);
+    var height = Math.ceil(bounds.height / scale);
+
+    var row, td;
+
+    var table = document.createElement('table');
+    var tbody = document.createElement('tbody');
+    table.setAttribute('cellpadding', (mxClient.IS_SF) ? '0' : '2');
+
+
+    // create input element filename
+    // row = document.createElement('tr');
+    // td = document.createElement('td');
+    // td.style.fontSize = '10pt';
+    // mxUtils.write(td, mxResources.get('filename') + ':');
+    //
+    // row.appendChild(td);
+    //
+    // var fileNameInput = document.createElement('input');
+    // fileNameInput.value = "fileName";
+    // fileNameInput.setAttribute('type', 'text');
+    // fileNameInput.style.width = '180px';
+    //
+    // td = document.createElement('td');
+    // td.appendChild(fileNameInput);
+    // row.appendChild(td);
+    //
+    // tbody.appendChild(row);
+    //================================================
+
+    // create input element user name
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('username') + ':');
+
+    row.appendChild(td);
+
+    var userNameInput = document.createElement('input');
+    // TODO remove preselection
+    userNameInput.value = "Franz.Pfeiler";
+    userNameInput.setAttribute('type', 'text');
+    userNameInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(userNameInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //===============================================
+
+    // create input element password
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('password') + ':');
+
+    row.appendChild(td);
+
+    var passwordInput = document.createElement('input');
+    // TODO remove preselection
+    passwordInput.value = "asdf";
+    passwordInput.setAttribute('type', 'password');
+    passwordInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(passwordInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //===============================================
+
+    // create Button row
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.setAttribute('align', 'right');
+    td.style.paddingTop = '22px';
+    td.colSpan = 2;
+
+    var saveBtn = mxUtils.button(mxResources.get('login'), mxUtils.bind(this, function () {
+        var onLoad = function (req) {
+            editorUi.showDialog(new UlearnSaveDataDialog(editorUi, req).container, 300, 230, true, true);
+        };
+
+        var onError = function (req) {
+            mxUtils.error("Fehler beim Speichern! HTTP Status " + req.getStatus, 200, true);
+        };
+
+        var onTimeout = function (req) {
+            mxUtils.error("Timeout! uLearn derzeit nicht verfügbar? HTTP Status " + req.getStatus);
+        };
+
+        editorUi.hideDialog();
+        var loginParams = "username=" + encodeURIComponent(userNameInput.value) + "&password=" + encodeURIComponent(passwordInput.value);
+        console.log(loginParams);
+        console.log(ULEARN_LOGIN_URL);
+
+        var req = new mxXmlRequest(ULEARN_LOGIN_URL, loginParams, 'GET');
+        req.send(onLoad(req), onError(req), 5000, onTimeout(req));
+    }));
+    saveBtn.className = 'geBtn gePrimaryBtn';
+
+    var cancelBtn = mxUtils.button(mxResources.get('cancel'), function () {
+        editorUi.hideDialog();
+    });
+    cancelBtn.className = 'geBtn';
+
+    if (editorUi.editor.cancelFirst) {
+        td.appendChild(cancelBtn);
+        td.appendChild(saveBtn);
+    } else {
+        td.appendChild(saveBtn);
+        td.appendChild(cancelBtn);
+    }
+
+    row.appendChild(td);
+    tbody.appendChild(row);
+    table.appendChild(tbody);
+    this.container = table;
+};
+
+/**
+ * Constructs a new dialog for storing the XML in uLearn (with workspace selection etc)
+ * editorUi holds the UI, giving access to the model XML
+ * LoginRequest holds the request and response made to log into uLearn (and thus has the Bearer Auth token)
+ */
+var UlearnSaveDataDialog = function (editorUi, loginRequest) {
+    console.log("loginRequest=" + loginRequest.toString());
+    var bearerToken = loginRequest.getText();
+    console.log("received bearerToken=" + bearerToken);
+
+    var graph = editorUi.editor.graph;
+    var bounds = graph.getGraphBounds();
+    var scale = graph.view.scale;
+
+    var width = Math.ceil(bounds.width / scale);
+    var height = Math.ceil(bounds.height / scale);
+
+    var row, td;
+
+    var table = document.createElement('table');
+    var tbody = document.createElement('tbody');
+    table.setAttribute('cellpadding', (mxClient.IS_SF) ? '0' : '2');
+
+    // create input element filename
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('filename') + ':');
+
+    row.appendChild(td);
+
+    var fileNameInput = document.createElement('input');
+    // TODO remove preselection
+    fileNameInput.value = "fileName.xml";
+    fileNameInput.setAttribute('type', 'text');
+    fileNameInput.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(fileNameInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //================================================
+
+    // create input element workspace
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('workspace') + ':');
+
+    row.appendChild(td);
+
+    var workspaceSelect = document.createElement('select');
+    workspaceSelect.value = "Franz.Pfeiler";
+    workspaceSelect.setAttribute('type', 'text');
+    workspaceSelect.style.width = '180px';
+
+    workspaceSelect.onchange = function () {
+        // TODO fetch submissions for selected workspace
+        // TODO change submission groups select options based on response
+        // TODO change submission specifications select options based on response
+        console.log("workspace change triggered");
+    };
+
+    for (var i = 0; i < array.length; i++) {
+        var option = document.createElement("option");
+        // TODO get workspace options from loginRequest
+        option.value = workspaceOptions[i].id;
+        option.text = workspaceOptions[i].name;
+        selectList.appendChild(option);
+    }
+
+    td = document.createElement('td');
+    td.appendChild(workspaceInput);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //===============================================
+
+    // create input element Abgabe-Gruppe
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('submissionGroup') + ':');
+
+    row.appendChild(td);
+
+    var submissionGroupSelect = document.createElement('select');
+    submissionGroupSelect.id = "subgroupSelect";
+    submissionGroupSelect.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(submissionGroupSelect);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+
+    //===============================================
+
+    // create input element Abgabe-Spezifikation
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.style.fontSize = '10pt';
+    mxUtils.write(td, mxResources.get('submissionSpecification') + ':');
+
+    row.appendChild(td);
+
+    var submissionSpecificationSelect = document.createElement('select');
+    submissionSpecificationSelect.id = "subspecSelect";
+    submissionSpecificationSelect.style.width = '180px';
+
+    td = document.createElement('td');
+    td.appendChild(submissionSpecificationSelect);
+    row.appendChild(td);
+
+    tbody.appendChild(row);
+    //===============================================
+
+    // create Button row
+    row = document.createElement('tr');
+    td = document.createElement('td');
+    td.setAttribute('align', 'right');
+    td.style.paddingTop = '22px';
+    td.colSpan = 2;
+
+    var saveBtn = mxUtils.button(mxResources.get('saveUlearn'), mxUtils.bind(this, function () {
+        var onLoad = function (req) {
+            mxUtils.confirm(mxResources.get('saveSuccess'));
+        };
+
+        var onError = function (req) {
+            // TODO how to display error message?
+            mxUtils.error("Fehler beim Speichern!" + req.getStatus, 200, true);
+        };
+
+        var onTimeout = function (req) {
+            mxUtils.error("Timeout! uLearn derzeit nicht verfügbar?" + req.getStatus);
+        };
+
+        var submissionParams = "&workspace=" + workspaceInput.id
+            + "&submissionGroup=" + submissionGroupInput.id
+            + "&submissionSpecification=" + submissionSpecificationInput.id;
+
+        var filename = encodeURIComponent(fileNameInput.value);
+        var data = encodeURIComponent(mxUtils.getXml(editorUi.editor.getGraphXml()));
+        var format = encodeURIComponent("xml");
+        var bearerToken = encodeURIComponent(token);
+        var groupId = submissionGroupSelect.id;
+        var submissionId = submissionSpecificationSelect.id;
+
+        if (data.length < MAX_REQUEST_SIZE) {
+            editorUi.hideDialog();
+            var req = new mxXmlRequest(ULEARN_SAVE_DATA_URL, 'token=' + bearerToken + '&groupId=' + groupId + '&submissionsId=' + submissionId
+                + '&xml=' + encodeURIComponent(data) + '&filename=' + filename);
+            req.send(onLoad(req), onError(req), 5000, onTimeout(req));
+        } else {
+            mxUtils.alert(mxResources.get('drawingTooLarge'));
+            mxUtils.popup(xml);
+        }
+    }));
+    saveBtn.className = 'geBtn gePrimaryBtn';
+
+    var cancelBtn = mxUtils.button(mxResources.get('cancel'), function () {
+        editorUi.hideDialog();
+    });
+    cancelBtn.className = 'geBtn';
+
+    if (editorUi.editor.cancelFirst) {
+        td.appendChild(cancelBtn);
+        td.appendChild(saveBtn);
+    } else {
+        td.appendChild(saveBtn);
+        td.appendChild(cancelBtn);
+    }
+
+    row.appendChild(td);
+    tbody.appendChild(row);
+    table.appendChild(tbody);
+    this.container = table;
+};
+
 /**
  * Constructs a new dialog for storing a XML in uLearn
  */

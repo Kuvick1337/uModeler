@@ -12,7 +12,7 @@ public class ListResponseDto {
 
     @Data
     public static class ListData {
-        private ResponseId id;
+        private ULearnObjectId id;
         private String name;
     }
 }

@@ -2,11 +2,7 @@ package at.jku.ce.umodeler.controller;
 
 import at.jku.ce.umodeler.LoggingRequestInterceptor;
 import at.jku.ce.umodeler.Pair;
-import at.jku.ce.umodeler.dto.AuthDto;
-import at.jku.ce.umodeler.dto.ListResponseDto;
-import at.jku.ce.umodeler.dto.SubmissionsResponseDto;
-import at.jku.ce.umodeler.dto.ULearnLoginResponseDto;
-import com.fasterxml.jackson.core.JsonProcessingException;
+import at.jku.ce.umodeler.dto.*;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.*;
@@ -29,19 +25,34 @@ import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * TODO this controller is work in progress.
+ * intended to provide a workspace/submission selection to the user
+ */
 @RestController
-public class ULearnController {
+public class ULearn2Controller {
     private final static String ULEARN_BASE_PATH = "https://dev.ce.jku.at/api/service/";
     private final static String ULEARN_LOGIN = ULEARN_BASE_PATH + "login";
 
     private final static String ULEARN_WORKSPACE_LIST = ULEARN_BASE_PATH + "api/workspace/list";
 
-    public ULearnController() {
-        System.out.println("ULearnController initialized");
+    public ULearn2Controller() {
+        System.out.println("ULearnController 2 initialized");
     }
 
-    @PostMapping("ulearn/save")
-    public void postModelToUlearn(HttpServletRequest request, HttpEntity<String> httpEntity, HttpServletResponse response) throws Exception {
+    /**
+     * returns the Bearer Auth token
+     *
+     * @return
+     * @throws Exception
+     */
+    @GetMapping("ulearnx/login")
+    public ClientLoginResponse loginToUlearnAndFetchWorkspaces /*(@RequestParam("username") String username,
+                                                               @RequestParam("password") String password) */
+
+
+    (HttpServletRequest request, HttpEntity<String> httpEntity, HttpServletResponse response) {
+        System.out.println("Start login");
 
         // split all request parameters into a map
         Map<String, String> requestParameters = Arrays.stream(Objects.requireNonNull(httpEntity.getBody())
@@ -54,52 +65,31 @@ public class ULearnController {
             }
         }).filter(Objects::nonNull).collect(Collectors.toMap(Pair::getFst, Pair::getSnd));
 
-        String fileName = requestParameters.getOrDefault("filename", "newFile.xml");
 
+        String decodedUsername = requestParameters.get("username");
+        String decodedPassword = requestParameters.get("password");
 
-        // Step 1: perform login to uLearn
-        String bearerToken = login(requestParameters);
-
-        // Step 2: fetch workspaces and find ID of correct one
-        ListResponseDto workspaces = fetchWorkspace(bearerToken);
-
-        // TODO filter through and find right workspace
-        long workspaceId = workspaces.getData().get(0).getId().getCreated();
-
-        // Step 3: fetch all submissions and find ID of correct one
-        SubmissionsResponseDto submissionResponse = fetchSubmissions(bearerToken, workspaceId);
-        // TODO filter through and find right submission
-
-        // Step 4: perform submission
-        doSubmission(bearerToken, submissionResponse.getData().get(0).getId().getCreated(),
-                submissionResponse.getData().get(0).getMembers().get(0).getId().getCreated(), requestParameters.get("xml"), fileName);
-
-        response.setStatus(200);
-        ControllerUtil.handleRequest(request, response);
-    }
-
-    /**
-     * performs the login to uLearn with the given parameter map (containing username and password)
-     *
-     * @param values parameter map
-     * @return the Bearer authorization token
-     */
-    private String login(Map<String, String> values) {
+//        String decodedUsername = URLDecoder.decode(username);
+//        String decodedPassword = URLDecoder.decode(password);
         RestTemplate restTemplate = new RestTemplate();
-
         HttpHeaders headers = new HttpHeaders();
+
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        HttpEntity<AuthDto> entity = new HttpEntity<>(new AuthDto(values.get("username"), values.get("password")), headers);
+        HttpEntity<AuthDto> entity = new HttpEntity<>(new AuthDto(decodedUsername, decodedPassword), headers);
         ResponseEntity<ULearnLoginResponseDto> result = restTemplate.exchange(ULEARN_LOGIN, HttpMethod.POST, entity, ULearnLoginResponseDto.class);
 
-        return result.getHeaders().get("Authorization").get(0);
+        System.out.println("Login Successful! Token=" + result.getHeaders().get("Authorization").get(0));
+
+        ClientLoginResponse clientLoginResponse = new ClientLoginResponse();
+        clientLoginResponse.setBearerToken(result.getHeaders().get("Authorization").get(0));
+
+        ListResponseDto workspaces = fetchWorkspace(clientLoginResponse.getBearerToken());
+        clientLoginResponse.setWorkspaces(workspaces.getData().stream()
+                .map(x -> new Pair<>(x.getName(), x.getId().getCreated())).collect(Collectors.toList()));
+
+        return clientLoginResponse;
     }
 
-    /**
-     * fetches a list of all workspaces a user has access to
-     * @param bearerToken user authentication token
-     * @return list of all workspaces
-     */
     private ListResponseDto fetchWorkspace(String bearerToken) {
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -112,32 +102,31 @@ public class ULearnController {
         return result.getBody();
     }
 
-    /**
-     * fetches a list of all submissions for the specified workspace id
-     * @param bearerToken
-     * @param workspaceId
-     * @return all available submissions
-     * @throws JsonProcessingException
-     */
-    private SubmissionsResponseDto fetchSubmissions(String bearerToken, long workspaceId) throws JsonProcessingException {
+    @GetMapping("ulearn2/submissions")
+    public SubmissionsResponseDto fetchSubmissionsForWorkspace(@RequestParam("token") String bearerToken,
+                                                               @RequestParam("workspace") long workspaceId) throws Exception {
+        System.out.println("Start submissions");
+        String decodedBearerToken = URLDecoder.decode(bearerToken);
+
         RestTemplate restTemplate = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set("Authorization", bearerToken);
+        headers.set("Authorization", decodedBearerToken);
         HttpEntity<String> entity = new HttpEntity<String>("", headers);
         ResponseEntity<SubmissionsResponseDto> result = restTemplate.exchange(ULEARN_BASE_PATH + "api/submission-specification-group/workspace:" + workspaceId + " ?global=false", HttpMethod.GET, entity, SubmissionsResponseDto.class);
         return result.getBody();
     }
 
-    /**
-     * @param bearerToken
-     * @param submissionGroupId
-     * @param submissionSpecId
-     * @param xml
-     * @param fileName
-     */
-    private void doSubmission(String bearerToken, long submissionGroupId, long submissionSpecId, String xml, String fileName) {
+    @PostMapping("ulearn2/save")
+    public void postModelToUlearn(@RequestParam("token") String bearerToken,
+                                  @RequestParam("groupId") long submissionGroupId,
+                                  @RequestParam("submissionId") long submissionSpecId,
+                                  @RequestParam("xml") String xml,
+                                  @RequestParam("filename") String fileName) {
+        String decodedBearerToken = URLDecoder.decode(bearerToken);
+        String decodedXML = URLDecoder.decode(xml);
+
         // this interceptor is added to log the sent requests onto the command line --> very useful for debugging!
         RestTemplate restTemplate = new RestTemplate(new BufferingClientHttpRequestFactory(new SimpleClientHttpRequestFactory()));
         List<ClientHttpRequestInterceptor> interceptors = new ArrayList<>();
@@ -146,12 +135,12 @@ public class ULearnController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setAccept(Collections.singletonList(MediaType.APPLICATION_JSON));
-        headers.set("Authorization", bearerToken);
+        headers.set("Authorization", decodedBearerToken);
         headers.setContentType(MediaType.MULTIPART_FORM_DATA);
         MultiValueMap<String, Object> bodyData = new LinkedMultiValueMap<>();
         bodyData.add("fileName", fileName);
 
-        Resource xmlFile = new ByteArrayResource(xml.getBytes(StandardCharsets.UTF_8)) {
+        Resource xmlFile = new ByteArrayResource(decodedXML.getBytes(StandardCharsets.UTF_8)) {
             @Override
             public String getFilename() {
                 return fileName;
@@ -168,12 +157,5 @@ public class ULearnController {
         System.out.println("url: " + url);
 
         ResponseEntity<Object> result = restTemplate.exchange(url, HttpMethod.PUT, entity, Object.class);
-    }
-
-    @GetMapping("/ulearn/load")
-    public void loadModelFromULearn(@RequestParam(name = "filename") String filename,
-                                    @RequestParam(name = "username") String username,
-                                    @RequestParam(name = "password") String password) {
-        System.out.println("GET /ulearn/load got called with filename=" + filename + ", username=" + username + ", password=" + password);
     }
 }
