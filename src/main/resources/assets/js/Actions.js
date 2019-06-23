@@ -79,8 +79,8 @@ Actions.prototype.init = function () {
 
     // fpfei: custom actions for saving to and loading from uLearn
     this.addAction('saveUlearn...', function () {
-        ui.showDialog(new UlearnSaveDialog(ui).container, 300, 230, true, true);
-        // ui.showDialog(new UlearnLoginDialog(ui).container, 300, 230, true, true);
+        // ui.showDialog(new UlearnSaveDialog(ui).container, 300, 230, true, true);
+        ui.showDialog(new UlearnLoginDialog(ui).container, 300, 230, true, true);
     });
 
     this.addAction('loadUlearn...', function () {

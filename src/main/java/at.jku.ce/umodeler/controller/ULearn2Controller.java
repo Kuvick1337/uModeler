@@ -17,12 +17,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.UnsupportedEncodingException;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.stream.Collectors;
 
 /**
@@ -46,31 +45,28 @@ public class ULearn2Controller {
      * @return
      * @throws Exception
      */
-    @GetMapping("ulearnx/login")
-    public ClientLoginResponse loginToUlearnAndFetchWorkspaces /*(@RequestParam("username") String username,
-                                                               @RequestParam("password") String password) */
+    @GetMapping("ulearn2/login")
+    public ClientLoginResponse loginToUlearnAndFetchWorkspaces(@RequestParam("username") String username,
+                                                               @RequestParam("password") String password)
 
-
-    (HttpServletRequest request, HttpEntity<String> httpEntity, HttpServletResponse response) {
+    /*(HttpServletRequest request, HttpEntity<String> httpEntity, HttpServletResponse response) */ {
         System.out.println("Start login");
 
         // split all request parameters into a map
-        Map<String, String> requestParameters = Arrays.stream(Objects.requireNonNull(httpEntity.getBody())
-                .split("&")).map(entity -> {
-            String[] result = entity.split("=");
-            try {
-                return new Pair<>(result[0], URLDecoder.decode(result.length == 1 ? "NaN" : result[1], StandardCharsets.UTF_8.toString()));
-            } catch (UnsupportedEncodingException e) {
-                return null;
-            }
-        }).filter(Objects::nonNull).collect(Collectors.toMap(Pair::getFst, Pair::getSnd));
+//        Map<String, String> requestParameters = Arrays.stream(Objects.requireNonNull(httpEntity.getBody())
+//                .split("&")).map(entity -> {
+//            String[] result = entity.split("=");
+//            try {
+//                return new Pair<>(result[0], URLDecoder.decode(result.length == 1 ? "NaN" : result[1], StandardCharsets.UTF_8.toString()));
+//            } catch (UnsupportedEncodingException e) {
+//                return null;
+//            }
+//        }).filter(Objects::nonNull).collect(Collectors.toMap(Pair::getFst, Pair::getSnd));
+//        String decodedUsername = requestParameters.get("username");
+//        String decodedPassword = requestParameters.get("password");
 
-
-        String decodedUsername = requestParameters.get("username");
-        String decodedPassword = requestParameters.get("password");
-
-//        String decodedUsername = URLDecoder.decode(username);
-//        String decodedPassword = URLDecoder.decode(password);
+        String decodedUsername = URLDecoder.decode(username);
+        String decodedPassword = URLDecoder.decode(password);
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
 

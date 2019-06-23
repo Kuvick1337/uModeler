@@ -777,6 +777,8 @@ var EditDiagramDialog = function (editorUi) {
     this.container = div;
 };
 
+var req;
+
 /**
  *
  */
@@ -796,26 +798,6 @@ var UlearnLoginDialog = function (editorUi) {
     var tbody = document.createElement('tbody');
     table.setAttribute('cellpadding', (mxClient.IS_SF) ? '0' : '2');
 
-
-    // create input element filename
-    // row = document.createElement('tr');
-    // td = document.createElement('td');
-    // td.style.fontSize = '10pt';
-    // mxUtils.write(td, mxResources.get('filename') + ':');
-    //
-    // row.appendChild(td);
-    //
-    // var fileNameInput = document.createElement('input');
-    // fileNameInput.value = "fileName";
-    // fileNameInput.setAttribute('type', 'text');
-    // fileNameInput.style.width = '180px';
-    //
-    // td = document.createElement('td');
-    // td.appendChild(fileNameInput);
-    // row.appendChild(td);
-    //
-    // tbody.appendChild(row);
-    //================================================
 
     // create input element user name
     row = document.createElement('tr');
@@ -866,9 +848,21 @@ var UlearnLoginDialog = function (editorUi) {
     td.style.paddingTop = '22px';
     td.colSpan = 2;
 
+    // var req; // = new mxXmlRequest(ULEARN_LOGIN_URL, loginParams, 'GET');
+
     var saveBtn = mxUtils.button(mxResources.get('login'), mxUtils.bind(this, function () {
-        var onLoad = function (req) {
-            editorUi.showDialog(new UlearnSaveDataDialog(editorUi, req).container, 300, 230, true, true);
+        editorUi.hideDialog();
+        var loginParams = 'username=' + encodeURIComponent(userNameInput.value) + '&password=' + encodeURIComponent(passwordInput.value);
+        console.log(loginParams);
+        console.log(ULEARN_LOGIN_URL);
+
+        req = new mxXmlRequest(ULEARN_LOGIN_URL, loginParams, 'GET');
+
+        var onLoad = function (req2) {
+            var data = req2.getText();
+            console.log(data);
+
+            editorUi.showDialog(new UlearnSaveDataDialog(editorUi, req2).container, 300, 230, true, true);
         };
 
         var onError = function (req) {
@@ -879,12 +873,7 @@ var UlearnLoginDialog = function (editorUi) {
             mxUtils.error("Timeout! uLearn derzeit nicht verfügbar? HTTP Status " + req.getStatus);
         };
 
-        editorUi.hideDialog();
-        var loginParams = "username=" + encodeURIComponent(userNameInput.value) + "&password=" + encodeURIComponent(passwordInput.value);
-        console.log(loginParams);
-        console.log(ULEARN_LOGIN_URL);
 
-        var req = new mxXmlRequest(ULEARN_LOGIN_URL, loginParams, 'GET');
         req.send(onLoad(req), onError(req), 5000, onTimeout(req));
     }));
     saveBtn.className = 'geBtn gePrimaryBtn';

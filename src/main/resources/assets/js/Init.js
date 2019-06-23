@@ -20,7 +20,7 @@ window.OPEN_FORM = window.OPEN_FORM || 'formOpen.html';
 window.ULEARN_SAVE_URL = window.ULEARN_SAVE_URL || 'http://localhost:8080/ulearn/save';
 window.ULEARN_LOAD_URL = window.ULEARN_LOAD_URL || 'http://localhost:8080/ulearn/load';
 
-window.ULEARN_LOGIN_URL = window.ULEARN_LOGIN_URL || 'http://localhost:8080/ulearnx/login';
+window.ULEARN_LOGIN_URL = window.ULEARN_LOGIN_URL || 'http://localhost:8080/ulearn2/login';
 window.ULEARN_FETCH_SUBMISSIONS_URL = window.ULEARN_LOGIN_URL || 'http://localhost:8080/ulearn2/submissions';
 window.ULEARN_SAVE_DATA_URL = window.ULEARN_LOGIN_URL || 'http://localhost:8080/ulearn2/save';
 
