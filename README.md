@@ -1,5 +1,5 @@
 # uModeler
-BPMN/S-BPM modelling tool for the Communication Engineering institute
+**_BPMN/S-BPM modelling tool for the JKU Communication Engineering institute_**
 
 ## local setup
 
@@ -19,6 +19,12 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
 * jar is build and started on port 8080
 * go to http://localhost:8080/ 
 
+## build a JAR file
+
+* select and run Gradle task _Umodeler [clean]_ (safety first)
+* select and run Gradle task _Umodeler [build]_
+* the compiled JAR file is in the directory _{project dir}/build/libs_
+
 ## implemented features
 
 * export as XML/SVG
@@ -29,9 +35,14 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
 
 ## Todos
 
-* add remote import from uLearn (can be done as soon as details about REST interfae are known)
+* add remote import from uLearn
 * rework URLs in Init.js from localhost to a DNS name (e.g. umodeler.ce.jku.at)
-* after save to uLearn the onError dialogue appears. What must the response look like to make it ok?
+* rework URLS in _ULearnController.java_ to link to the production instance
+* add a favicon
+* encrypt clients uLearn password (currently transferred only URL-encoded -> basically plain text)
+* there seems to be an issue with the onError function of the mxXMLRequest, thus errors on save are not displayed
+    - if the login fails, no error message is displayed
+    - if the save to Ulearn fails  (e.g. submission timeframe already over), nothing is displayed
 
 # Documentation
 
@@ -39,24 +50,37 @@ BPMN/S-BPM modelling tool for the Communication Engineering institute
 
 ### dialogues for saving/loading to uLearn
 
-The modals are built using JS code in the file _Dialog.js_. This file contains objects for all dialogues used in the frontend. The _UlearnSaveDialog_ and _UlearnLoadDialog_ are custom extensions for the uLearn save/load functionality. The URLs called by these dialogues can be found in the file _Init.js_.
+The modals are built using JS code in the file `Dialog.js`. This file contains objects for all dialogues used in the frontend. 
+The URLs called by these dialogues can be found in the file `Init.js`.  
+For the upload/download to uLearn the follwing dialogues are needed:
+
+* `UlearnLoginSaveDialog`: opens a login modal, which fetches the users Bearer token and opens the submission selection modal
+* `UlearnSaveDataDialog`: this modal allows the user to enter a filename and choose a workspace/submission for the file upload
+* `UlearnLoadDialog`: **NOT YET IMPLEMENTED** - this modal should allow the user to choose a file and load it from uLearn into the editor
 
 ### menu structure
 
-The _File_ menu structure has been modified to be more intuitive. If changes are to be made the menus itself are built in file _Menu.js_, where the menu actions (see file _Actions.js_) are added. The actions can either be edited directly or copied and then customized.
+The _File_ menu structure has been modified to be more intuitive. 
+If changes are to be made the menus itself are built in file `Menu.js`, where the menu actions (see file `Actions.js`) are added. 
+The actions can either be edited directly or copied and then customized.
+
+### modelling stuff
+
+* **TODO Carina**
 
 ## Backend
 
 ### Introduction
 
 The backend is a Java REST-Server powered by [Spring](https://spring.io/). The project is built using the build automation tool Gradle. The most important files are:
-*  _build.gradle_: contains the whole project configuration including neccessary libraries and build options.
-* _Application.java_: main entry point to start the Spring server at startup
-* _ModelerConfiguration_: Spring configuration file which allows the frontend assets to be requested and delivered
+*  `build.gradle`: contains the whole project configuration including neccessary libraries and build options.
+* `Application.java`: main entry point to start the Spring server at startup
+* `ModelerConfiguration`: Spring configuration file which allows the frontend assets to be requested and delivered
 
 ### REST-Controllers
 
-* _IndexController_: delivers the modeler application. Thymeleaf is used to simply refer to the _index.html_ file.
-* _ExportController_: converts the model sent by the frontend to a SVG file and sends it back to the client to download.
-* _SaveController_: converts the model sent by the frontend to a pure XML file and sends it back to the client to download.
-* _uLearnController_: handels loading and storing to uLearn  TODO 
+* `IndexController`: delivers the modeler application. Thymeleaf is used to simply refer to the _index.html_ file.
+* `ExportController`: converts the model sent by the frontend to a SVG file and sends it back to the client to download.
+* `SaveController`: converts the model sent by the frontend to a pure XML file and sends it back to the client to download.
+* `UlearnController`: this controller offers REST endpoints for 1) logging into uLearn, 2) fetching submissionGroups and submissionSpecifications 
+for a workspace and uploading the current model graph to a selected 

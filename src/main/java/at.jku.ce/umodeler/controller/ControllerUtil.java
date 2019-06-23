@@ -136,9 +136,6 @@ public class ControllerUtil {
                 } else if (xml != null) {
                     data = xml.getBytes(Utils.CHARSET_FOR_URL_ENCODING);
 
-                    // TODO XML in Bild konvertieren
-
-
                     String format = request.getParameter("format");
 
                     if (format == null) {
