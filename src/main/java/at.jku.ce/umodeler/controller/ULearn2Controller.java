@@ -11,10 +11,7 @@ import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.net.URLDecoder;
@@ -116,8 +113,8 @@ public class ULearn2Controller {
 
     @PostMapping("ulearn2/save")
     public void postModelToUlearn(@RequestParam("token") String bearerToken,
-                                  @RequestParam("groupId") long submissionGroupId,
-                                  @RequestParam("submissionId") long submissionSpecId,
+                                  @RequestParam("groupId") String submissionGroupId,
+                                  @RequestParam("submissionId") String submissionSpecId,
                                   @RequestParam("xml") String xml,
                                   @RequestParam("filename") String fileName) {
         String decodedBearerToken = URLDecoder.decode(bearerToken);

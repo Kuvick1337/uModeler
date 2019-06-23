@@ -856,7 +856,7 @@ var UlearnLoginDialog = function (editorUi) {
         console.log(loginParams);
         console.log(ULEARN_LOGIN_URL);
 
-        req = new mxXmlRequest(ULEARN_LOGIN_URL, loginParams, 'GET');
+        req = new mxXmlRequest(ULEARN_LOGIN_URL + "?" + loginParams, null, 'GET');
 
         var onLoad = function (req2) {
             var data = req2.getText();
@@ -874,7 +874,7 @@ var UlearnLoginDialog = function (editorUi) {
         };
 
 
-        req.send(onLoad(req), onError(req), 5000, onTimeout(req));
+        req.send(onLoad, onError, 5000, onTimeout);
     }));
     saveBtn.className = 'geBtn gePrimaryBtn';
 
@@ -904,8 +904,40 @@ var UlearnLoginDialog = function (editorUi) {
  */
 var UlearnSaveDataDialog = function (editorUi, loginRequest) {
     console.log("loginRequest=" + loginRequest.toString());
-    var bearerToken = loginRequest.getText();
+    var bearerToken = JSON.parse(loginRequest.getText());
+    var workspaceOptions = bearerToken.workspaces;
     console.log("received bearerToken=" + bearerToken);
+    var submissionGroupSelect = document.createElement('select');
+    var submissionSpecificationSelect = document.createElement('select');
+    var groupsWithSpecs = [];
+
+    var onGroupChange = function() {
+        var groupId = submissionGroupSelect.value;
+        for(var group of groupsWithSpecs) {
+            if(group.id.created == groupId) {
+                submissionSpecificationSelect.innerHTML = "";
+                for(var spec of group.members) {
+                    var option = document.createElement("option");
+                    option.value = spec.id.created;
+                    option.text = spec.name;
+                    submissionSpecificationSelect.appendChild(option);
+                }
+                break;
+            }
+        }
+    };
+
+    var setupGroups = function() {
+        submissionGroupSelect.innerHTML = "";
+        for(var group of groupsWithSpecs) {
+            var option = document.createElement("option");
+            option.value = group.id.created;
+            option.text = group.name;
+            submissionGroupSelect.appendChild(option);
+        }
+    };
+
+    submissionGroupSelect.onchange = onGroupChange;
 
     var graph = editorUi.editor.graph;
     var bounds = graph.getGraphBounds();
@@ -955,22 +987,52 @@ var UlearnSaveDataDialog = function (editorUi, loginRequest) {
     workspaceSelect.style.width = '180px';
 
     workspaceSelect.onchange = function () {
+        var submissionParams = 'token=' + encodeURIComponent(bearerToken.bearerToken) + '&workspace=' + encodeURIComponent(workspaceSelect.value);
+        console.log(submissionParams);
+        console.log(ULEARN_FETCH_SUBMISSIONS_URL);
+
+        req = new mxXmlRequest(ULEARN_FETCH_SUBMISSIONS_URL + "?" + submissionParams, null, 'GET');
+
+        var onLoad = function (req2) {
+            var data = JSON.parse(req2.getText());
+            console.log(data);
+            groupsWithSpecs = data.data;
+            setupGroups();
+            onGroupChange();
+        };
+
+        var onError = function (req) {
+            mxUtils.error("Fehler beim Speichern! HTTP Status " + req.getStatus, 200, true);
+        };
+
+        var onTimeout = function (req) {
+            mxUtils.error("Timeout! uLearn derzeit nicht verfügbar? HTTP Status " + req.getStatus);
+        };
+
+
+        req.send(onLoad, onError, 5000, onTimeout);
+
+
+
+
         // TODO fetch submissions for selected workspace
         // TODO change submission groups select options based on response
         // TODO change submission specifications select options based on response
         console.log("workspace change triggered");
     };
 
-    for (var i = 0; i < array.length; i++) {
+    workspaceSelect.innerHTML = " <option value=\"\" selected disabled hidden>Choose here</option>";
+
+    for (var i = 0; i < workspaceOptions.length; i++) {
         var option = document.createElement("option");
         // TODO get workspace options from loginRequest
-        option.value = workspaceOptions[i].id;
-        option.text = workspaceOptions[i].name;
-        selectList.appendChild(option);
+        option.value = workspaceOptions[i].snd;
+        option.text = workspaceOptions[i].fst;
+        workspaceSelect.appendChild(option);
     }
 
     td = document.createElement('td');
-    td.appendChild(workspaceInput);
+    td.appendChild(workspaceSelect);
     row.appendChild(td);
 
     tbody.appendChild(row);
@@ -984,7 +1046,6 @@ var UlearnSaveDataDialog = function (editorUi, loginRequest) {
 
     row.appendChild(td);
 
-    var submissionGroupSelect = document.createElement('select');
     submissionGroupSelect.id = "subgroupSelect";
     submissionGroupSelect.style.width = '180px';
 
@@ -1004,7 +1065,6 @@ var UlearnSaveDataDialog = function (editorUi, loginRequest) {
 
     row.appendChild(td);
 
-    var submissionSpecificationSelect = document.createElement('select');
     submissionSpecificationSelect.id = "subspecSelect";
     submissionSpecificationSelect.style.width = '180px';
 
@@ -1022,7 +1082,9 @@ var UlearnSaveDataDialog = function (editorUi, loginRequest) {
     td.style.paddingTop = '22px';
     td.colSpan = 2;
 
-    var saveBtn = mxUtils.button(mxResources.get('saveUlearn'), mxUtils.bind(this, function () {
+    var test = "asdf";
+
+    var onClick = function() {
         var onLoad = function (req) {
             mxUtils.confirm(mxResources.get('saveSuccess'));
         };
@@ -1036,27 +1098,29 @@ var UlearnSaveDataDialog = function (editorUi, loginRequest) {
             mxUtils.error("Timeout! uLearn derzeit nicht verfügbar?" + req.getStatus);
         };
 
-        var submissionParams = "&workspace=" + workspaceInput.id
-            + "&submissionGroup=" + submissionGroupInput.id
-            + "&submissionSpecification=" + submissionSpecificationInput.id;
+        var submissionParams = "&workspace=" + workspaceSelect.value
+            + "&submissionGroup=" + submissionGroupSelect.value
+            + "&submissionSpecification=" + submissionSpecificationSelect.value;
 
         var filename = encodeURIComponent(fileNameInput.value);
         var data = encodeURIComponent(mxUtils.getXml(editorUi.editor.getGraphXml()));
         var format = encodeURIComponent("xml");
-        var bearerToken = encodeURIComponent(token);
-        var groupId = submissionGroupSelect.id;
-        var submissionId = submissionSpecificationSelect.id;
+        var bearerTokenEncoded = encodeURIComponent(bearerToken.bearerToken);
+        var groupId = submissionGroupSelect.value;
+        var submissionId = submissionSpecificationSelect.value;
 
         if (data.length < MAX_REQUEST_SIZE) {
-            editorUi.hideDialog();
-            var req = new mxXmlRequest(ULEARN_SAVE_DATA_URL, 'token=' + bearerToken + '&groupId=' + groupId + '&submissionsId=' + submissionId
-                + '&xml=' + encodeURIComponent(data) + '&filename=' + filename);
-            req.send(onLoad(req), onError(req), 5000, onTimeout(req));
+            var req = new mxXmlRequest(ULEARN_SAVE_DATA_URL + '?groupId=' + groupId + '&submissionId=' + submissionId
+                + '&xml=' + encodeURIComponent(data) + '&filename=' + filename + "&token=" + bearerTokenEncoded, null);
+            req.send(onLoad, onError, 5000, onTimeout);
         } else {
             mxUtils.alert(mxResources.get('drawingTooLarge'));
-            mxUtils.popup(xml);
+            mxUtils.popup(null /*xml*/);
         }
-    }));
+    };
+
+
+    var saveBtn = mxUtils.button(mxResources.get('saveUlearn'), onClick);
     saveBtn.className = 'geBtn gePrimaryBtn';
 
     var cancelBtn = mxUtils.button(mxResources.get('cancel'), function () {

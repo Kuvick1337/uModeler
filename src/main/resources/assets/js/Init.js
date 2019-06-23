@@ -21,8 +21,8 @@ window.ULEARN_SAVE_URL = window.ULEARN_SAVE_URL || 'http://localhost:8080/ulearn
 window.ULEARN_LOAD_URL = window.ULEARN_LOAD_URL || 'http://localhost:8080/ulearn/load';
 
 window.ULEARN_LOGIN_URL = window.ULEARN_LOGIN_URL || 'http://localhost:8080/ulearn2/login';
-window.ULEARN_FETCH_SUBMISSIONS_URL = window.ULEARN_LOGIN_URL || 'http://localhost:8080/ulearn2/submissions';
-window.ULEARN_SAVE_DATA_URL = window.ULEARN_LOGIN_URL || 'http://localhost:8080/ulearn2/save';
+window.ULEARN_FETCH_SUBMISSIONS_URL = 'http://localhost:8080/ulearn2/submissions';
+window.ULEARN_SAVE_DATA_URL = 'http://localhost:8080/ulearn2/save';
 
 // Sets the base path, the UI language via URL param and configures the
 // supported languages to avoid 404s. The loading of all core language
