@@ -38,6 +38,7 @@
 * add remote import from uLearn
 * rework URLs in Init.js from localhost to a DNS name (e.g. umodeler.ce.jku.at)
 * rework URLS in _ULearnController.java_ to link to the production instance
+* currently all submissions are listed, even the ones already closed -> error when submitting there
 * add a favicon
 * encrypt clients uLearn password (currently transferred only URL-encoded -> basically plain text)
 * there seems to be an issue with the onError function of the mxXMLRequest, thus errors on save are not displayed
