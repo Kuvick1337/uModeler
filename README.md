@@ -67,7 +67,17 @@ The actions can either be edited directly or copied and then customized.
 
 ### modelling stuff
 
-* **TODO Carina**
+There are templates for the modelling languages which are find in the folder 'Stencils'. The model which are seen in the uModeler can be find in the file 'Sidebar.js'.
+These are the currently available modelling templates:
+* General: contains general modelling figures
+* BPMN General: contains the base elements in BPMN
+* BPMN Events: the BPMN Events can be find here
+* BPMN Swimlanes: here are the swimlane and the pool of BPMN
+* BPMN Message: the message symbols of BPMN are found here
+* BPMN Gateway: this palette contains the gateways for the BPMN language
+* S-BPM SID: all SID elements of S-BPM SID can be found here 
+* S-BPM SBD: all SID elements of S-BPM SBD can be found here
+The templates are part of self-made and part of used from the BPMN stencil. Furthermore the templates are easy to expand because there are a few hidden templates which can be easily add if the add part is uncommented. Also if new templates should be implemented, the implementer can use the stencils to create the new symbols.
 
 ## Backend
 
