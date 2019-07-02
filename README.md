@@ -84,4 +84,4 @@ The backend is a Java REST-Server powered by [Spring](https://spring.io/). The p
 * `ExportController`: converts the model sent by the frontend to a SVG file and sends it back to the client to download.
 * `SaveController`: converts the model sent by the frontend to a pure XML file and sends it back to the client to download.
 * `UlearnController`: this controller offers REST endpoints for 1) logging into uLearn, 2) fetching submissionGroups and submissionSpecifications 
-for a workspace and uploading the current model graph to a selected submissionSpecification
+for a workspace and 3) uploading the current model graph to a selected submissionSpecification
