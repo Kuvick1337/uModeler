@@ -86,6 +86,7 @@ Sidebar.prototype.init = function()
 	this.addBpmnSwimlanesPalette(dir, true);
 	this.addBpmnMessagePalette(dir, true);
 	this.addBpmnGatewayPalette(dir, true);
+	this.addBpmnSupplementPalette(dir, true)
 	this.addSbpmSIDPalette(dir);
     this.addSbpmSBDPalette(dir);
 
@@ -1686,9 +1687,7 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 
 			return sb.createVertexTemplateFromCells([cell], 135, 80, 'Attached Timer Event 2');
 		}),
-		this.createVertexTemplateEntry('swimlane;html=1;horizontal=0;startSize=20;', 320, 240, 'Pool', 'Pool', null, null, 'bpmn pool'),
-		this.createVertexTemplateEntry('swimlane;html=1;horizontal=0;swimlaneLine=0;', 300, 120, 'Lane', 'Lane', null, null, 'bpmn lane'),
-	 	this.createVertexTemplateEntry('shape=hexagon;html=1;whiteSpace=wrap;perimeter=hexagonPerimeter;rounded=0;', 60, 50, '', 'Conversation', null, null, 'bpmn conversation'),
+		this.createVertexTemplateEntry('shape=hexagon;html=1;whiteSpace=wrap;perimeter=hexagonPerimeter;rounded=0;', 60, 50, '', 'Conversation', null, null, 'bpmn conversation'),
 	 	this.createVertexTemplateEntry('shape=hexagon;html=1;whiteSpace=wrap;perimeter=hexagonPerimeter;strokeWidth=4;rounded=0;', 60, 50, '', 'Call Conversation', null, null, 'bpmn call conversation'),
 		this.addEntry('bpmn subconversation sub conversation sub-conversation', function()
 		{
@@ -1707,36 +1706,11 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 		{
 			var cell = new mxCell('', new mxGeometry(0, 0, 40, 60), 'shape=note;whiteSpace=wrap;size=16;html=1;');
 			cell.vertex = true;
-			
-			var cell1 = new mxCell('', new mxGeometry(0, 0, 14, 14), 'html=1;shape=singleArrow;arrowWidth=0.4;arrowSize=0.4;outlineConnect=0;');
-			cell1.vertex = true;
-			cell1.geometry.relative = true;
-			cell1.geometry.offset = new mxPoint(2, 2);
-			cell.insert(cell1);
-			
-			var cell2 = new mxCell('', new mxGeometry(0.5, 1, 14, 14), 'html=1;whiteSpace=wrap;shape=parallelMarker;outlineConnect=0;');
-			cell2.vertex = true;
-			cell2.geometry.relative = true;
-			cell2.geometry.offset = new mxPoint(-7, -14);
-			cell.insert(cell2);
-			
+
 			return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Data Object');
 		}),
 		this.createVertexTemplateEntry('shape=datastore;whiteSpace=wrap;html=1;', 60, 60, '', 'Data Store', null, null, 'bpmn data store'),
-	 	this.createVertexTemplateEntry('shape=plus;html=1;outlineConnect=0;', 14, 14, '', 'Sub-Process Marker', null, null, 'bpmn subprocess sub process sub-process marker'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bpmn.loop;html=1;outlineConnect=0;', 14, 14, '', 'Loop Marker', null, null, 'bpmn loop marker'),
-	 	this.createVertexTemplateEntry('shape=parallelMarker;html=1;outlineConnect=0;', 14, 14, '', 'Parallel MI Marker', null, null, 'bpmn parallel mi marker'),
-	 	this.createVertexTemplateEntry('shape=parallelMarker;direction=south;html=1;outlineConnect=0;', 14, 14, '', 'Sequential MI Marker', null, null, 'bpmn sequential mi marker'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bpmn.ad_hoc;fillColor=#000000;html=1;outlineConnect=0;', 14, 14, '', 'Ad Hoc Marker', null, null, 'bpmn ad hoc marker'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation;html=1;outlineConnect=0;', 14, 14, '', 'Compensation Marker', null, null, 'bpmn compensation marker'),
-	 	this.createVertexTemplateEntry('shape=message;whiteSpace=wrap;html=1;outlineConnect=0;fillColor=#000000;strokeColor=#ffffff;strokeWidth=2;', 40, 30, '', 'Send Task', null, null, 'bpmn send task'),
-	 	this.createVertexTemplateEntry('shape=message;whiteSpace=wrap;html=1;outlineConnect=0;', 40, 30, '', 'Receive Task', null, null, 'bpmn receive task'),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bpmn.user_task;html=1;outlineConnect=0;', 14, 14, '', 'User Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'user_task').join(' ')),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bpmn.manual_task;html=1;outlineConnect=0;', 14, 14, '', 'Manual Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'user_task').join(' ')),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bpmn.business_rule_task;html=1;outlineConnect=0;', 14, 14, '', 'Business Rule Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'business_rule_task').join(' ')),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bpmn.service_task;html=1;outlineConnect=0;', 14, 14, '', 'Service Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'service_task').join(' ')),
-	 	this.createVertexTemplateEntry('shape=mxgraph.bpmn.script_task;html=1;outlineConnect=0;', 14, 14, '', 'Script Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'script_task').join(' ')),
-		this.createVertexTemplateEntry('html=1;shape=mxgraph.flowchart.annotation_2;align=left;', 50, 100, '', 'Annotation', null, null, this.getTagsForStencil('bpmn', 'annotation_1', 'bpmn business process model ').join(' ')),
+	 	this.createVertexTemplateEntry('html=1;shape=mxgraph.flowchart.annotation_2;align=left;', 50, 100, '', 'Annotation', null, null, this.getTagsForStencil('bpmn', 'annotation_1', 'bpmn business process model ').join(' ')),
 		this.createVertexTemplateEntry('rounded=1;arcSize=10;dashed=1;strokeColor=#000000;fillColor=none;gradientColor=none;dashPattern=8 3 1 3;strokeWidth=2;',
 				 200, 200, '', 'Group', null, null, this.getTagsForStencil('bpmn', 'group', 'bpmn business process model ').join(' ')),
 
@@ -1811,9 +1785,36 @@ Sidebar.prototype.addBpmnEventPalette = function(dir, expand)
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis', null, null, 'start general event ereignis'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis', null, null, 'general event zwischenereignis'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis', null, null, 'end general event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Nachricht', null, null, 'start nachricht message event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Nachricht', null, null, 'nachricht message event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Empfangsnachricht Startereignis', null, null, 'start nachricht message event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Empfangsnachricht Zwischenereignis ', null, null, 'nachricht message event zwischenereignis'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Nachricht', null, null, 'end message nachricht event ereignis'),
+            this.addEntry('bpmn event message send intermediate', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_intermediate;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0, 0, 40, 25), 'shape=message;strokeColor=#ffffff;strokeWidth=2;html=1;whiteSpace=wrap;html=1;outlineConnect=0;fillColor=#000000;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(7.5, 15);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Sendenachricht Zwischenereignis');
+            }),
+
+            this.addEntry('bpmn event message send end', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_end;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0, 0, 40, 25), 'shape=message;strokeColor=#ffffff;strokeWidth=2;html=1;whiteSpace=wrap;html=1;outlineConnect=0;fillColor=#000000;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(7.5, 15);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Sendenachricht Endereignis');
+            }),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Zeit', null, null, 'start zeit timer event ereignis'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Zeit', null, null, 'zeit timer event zwischenereignis'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;strokeWidth=2', 55, 55, '', 'Endereignis Zeit', null, null, 'end zeit timer event ereignis'),
@@ -1828,11 +1829,46 @@ Sidebar.prototype.addBpmnEventPalette = function(dir, expand)
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.cancel_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Abbruch', null, null, 'end abbruch cancel event ereignis'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Kompensation', null, null, 'kompensation compensation event zwischenereignis'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Kompensation', null, null, 'end kompensation compensation event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Mehrfach', null, null, 'start mehrfach multiple event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_instances;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Instanzereignis Mehrfach', null, null, 'mehrfach multiple event instanzereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Mehrfach', null, null, 'mehrfach multiple event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Mehrfach', null, null, 'end mehrfach multiple event ereignis')
+            this.addEntry('bpmn event multiple mehrfach start', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_start;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
 
+                var celll = new mxCell('', new mxGeometry(0, 0, 35, 35), 'shape=mxgraph.basic.pentagon;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(10, 7.5);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Mehrfach Startereignis');
+            }),
+            this.addEntry('bpmn event multiple mehrfach intermediate', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_intermediate;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0, 0, 35, 35), 'shape=mxgraph.basic.pentagon;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(10, 7.5);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Mehrfach Zwischenereignis');
+            }),
+            this.addEntry('bpmn event multiple mehrfach end', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_end;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0, 0, 35, 35), 'shape=mxgraph.basic.pentagon;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(10, 7.5);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Mehrfach Endereignis');
+            })
+			//this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_instances;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Instanzereignis Mehrfach', null, null, 'mehrfach multiple event instanzereignis'),
 
         ];
 
@@ -1851,13 +1887,61 @@ Sidebar.prototype.addBpmnGatewayPalette = function(dir, expand)
         [
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'exklusives Gateway', null, null, 'exklusives Gateway exclusive'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_xor_(data);html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'exklusives Gateway', null, null, 'exklusives Gateway exclusive'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_xor_(event);html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'ereignis-basiertes Gateway', null, null, 'ergeignis-basiertes Gateway '),
+            this.addEntry('bpmn gateway ereignisbasiert', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 60, 90), 'shape=mxgraph.bpmn.gateway;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var circle = new mxCell('', new mxGeometry(0, 0, 35, 35), 'shape=mxgraph.bpmn.general_start;whiteSpace=wrap;size=16;html=1;');
+				circle.vertex = true;
+				circle.geometry.relative = true;
+				circle.geometry.offset = new mxPoint(12.5,27.5);
+				cell.insert(circle);
+
+                var pentagon = new mxCell('', new mxGeometry(0, 0, 25, 25), 'shape=mxgraph.basic.pentagon;whiteSpace=wrap;size=16;html=1;');
+                pentagon.vertex = true;
+                pentagon.geometry.relative = true;
+                pentagon.geometry.offset = new mxPoint(5,4);
+                circle.insert(pentagon);
+
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Ereignisbasiertes Gateway');
+            }),
 			this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_and;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'paralleles Gateway', null, null, 'paralleles Gateway parallel'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_or;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'inklusives Gateway', null, null, 'inklusives Gateway inclusive'),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.gateway_complex;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 60, 90, '', 'komplexes Gateway', null, null, 'komplexes Gateway komplex')
         ];
 
     this.addPaletteFunctions('bpmn', 'BPMN Gateway', false, fns);
+};
+
+/**
+ * Adds the BPMN Supplement library to the sidebar.
+ */
+Sidebar.prototype.addBpmnSupplementPalette = function(dir, expand)
+{
+    // Avoids having to bind all functions to "this"
+    var sb = this;
+
+    var fns =
+        [
+            this.createVertexTemplateEntry('shape=plus;html=1;outlineConnect=0;', 14, 14, '', 'Sub-Process Marker', null, null, 'bpmn subprocess sub process sub-process marker'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.loop;html=1;outlineConnect=0;', 14, 14, '', 'Loop Marker', null, null, 'bpmn loop marker'),
+            this.createVertexTemplateEntry('shape=parallelMarker;html=1;outlineConnect=0;', 14, 14, '', 'Parallel MI Marker', null, null, 'bpmn parallel mi marker'),
+            this.createVertexTemplateEntry('shape=parallelMarker;direction=south;html=1;outlineConnect=0;', 14, 14, '', 'Sequential MI Marker', null, null, 'bpmn sequential mi marker'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.ad_hoc;fillColor=#000000;html=1;outlineConnect=0;', 14, 14, '', 'Ad Hoc Marker', null, null, 'bpmn ad hoc marker'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation;html=1;outlineConnect=0;', 14, 14, '', 'Compensation Marker', null, null, 'bpmn compensation marker'),
+            this.createVertexTemplateEntry('shape=message;whiteSpace=wrap;html=1;outlineConnect=0;fillColor=#000000;strokeColor=#ffffff;strokeWidth=2;', 40, 30, '', 'Send Task', null, null, 'bpmn send task'),
+            this.createVertexTemplateEntry('shape=message;whiteSpace=wrap;html=1;outlineConnect=0;', 40, 30, '', 'Receive Task', null, null, 'bpmn receive task'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.user_task;html=1;outlineConnect=0;', 14, 14, '', 'User Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'user_task').join(' ')),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.manual_task;html=1;outlineConnect=0;', 14, 14, '', 'Manual Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'user_task').join(' ')),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.business_rule_task;html=1;outlineConnect=0;', 14, 14, '', 'Business Rule Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'business_rule_task').join(' ')),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.service_task;html=1;outlineConnect=0;', 14, 14, '', 'Service Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'service_task').join(' ')),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.script_task;html=1;outlineConnect=0;', 14, 14, '', 'Script Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'script_task').join(' ')),
+			this.createVertexTemplateEntry('shape=singleArrow;html=1; arrowWidth=0.4;arrowSize=0.4;outlineConnect=0', 14,14, '', 'Arrow', null, null, 'bpmn arrow')
+        ];
+
+    this.addPaletteFunctions('bpmn', 'BPMN Supplement', false, fns);
 };
 
 /**
@@ -1868,10 +1952,65 @@ Sidebar.prototype.addSbpmSIDPalette = function (dir) {
     var sb = this;
 
     var fns =
-        [
+		[
             this.createVertexTemplateEntry('swimlane;html=1;collapsible=0;horizontal=1;fontStyle=0;childLayout=stackLayout;startSize=20;', 100, 120, 'Subjekt', 'Subjekt', null, null, 'sbpm subject subjekt'),
-            this.createEdgeTemplateEntry('endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Nachricht oder Bedingung', null, 'sbpm nachricht bedingung')
-        ]
+            this.createEdgeTemplateEntry('endArrow=block;endFill=1;endSize=6;html=1;', 100, 0, '', 'Nachricht oder Bedingung', null, 'sbpm nachricht bedingung'),
+    		this.addEntry('nachricht flow bedingung sbpm', function()
+    		{
+				var edge = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=1;endSize=6;html=1;');
+				edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+				edge.geometry.setTerminalPoint(new mxPoint(150, 0), false);
+				edge.geometry.relative = true;
+				edge.edge = true;
+
+                var celll = new mxCell('', new mxGeometry(0, 0, 80, 50), 'shape=partialRectangle;html=1;outlineConnect=0;');
+				celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(-35, -20);
+                edge.insert(celll);
+
+				var cell = new mxCell('', new mxGeometry(0, 0, 18, 12), 'shape=message;html=1;outlineConnect=0;');
+				cell.geometry.relative = true;
+				cell.vertex = true;
+				cell.geometry.offset = new mxPoint(-29, -14);
+				edge.insert(cell);
+
+        		return sb.createEdgeTemplateFromCells([edge], 150, 0, 'Bedingung mit Nachricht');
+    		}),
+            this.addEntry('geschäftsobjekt flow bedingung sbpm', function()
+            {
+                var edge = new mxCell('', new mxGeometry(0, 0, 0, 0), 'endArrow=block;endFill=1;endSize=6;html=1;');
+                edge.geometry.setTerminalPoint(new mxPoint(0, 0), true);
+                edge.geometry.setTerminalPoint(new mxPoint(150, 0), false);
+                edge.geometry.relative = true;
+                edge.edge = true;
+
+                var celll = new mxCell('', new mxGeometry(0, 0, 20, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(-15, -15);
+                edge.insert(celll);
+
+                var edge1 = new mxCell('', new mxGeometry(30, 30, 30, 30), 'endArrow=none;html=1;');
+                edge1.geometry.offset= new mxPoint(-55, -55);
+                edge1.geometry.relative = true;
+                celll.insert(edge1);
+
+                return sb.createEdgeTemplateFromCells([edge], 150, 0, 'Bedingung mit Geschäftsobjekt');
+            }),
+            this.addEntry('geschäftsobjekt', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 30, 40), 'html=1;whiteSpace=wrap;outlineConnect=0;');
+                cell.vertex = true;
+
+                var edge1 = new mxCell('', new mxGeometry(0, 0, 30, 0), 'shape=singleArrow;endArrow=none;html=1;');
+                edge1.geometry.offset= new mxPoint(6, 6);
+                edge1.geometry.relative = true;
+                cell.insert(edge1);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Geschäftsobjekt');
+            })
+		];
     this.addPaletteFunctions('sbpm', 'S-BPM SID' , false, fns);
 };
 
