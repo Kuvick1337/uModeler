@@ -1714,8 +1714,9 @@ Sidebar.prototype.addBpmnPalette = function(dir, expand)
 		this.createVertexTemplateEntry('rounded=1;arcSize=10;dashed=1;strokeColor=#000000;fillColor=none;gradientColor=none;dashPattern=8 3 1 3;strokeWidth=2;',
 				 200, 200, '', 'Group', null, null, this.getTagsForStencil('bpmn', 'group', 'bpmn business process model ').join(' ')),
 
-		this.createEdgeTemplateEntry('shape=link;html=1;', 100, 0, '', 'Kommunikationslink', null, 'bpmn link')
-	];
+		this.createEdgeTemplateEntry('shape=link;html=1;', 100, 0, '', 'Communication Link', null, 'bpmn link'),
+        this.createEdgeTemplateEntry('endArrow=classic;dashed=1;html=1;', 50, 50, '', 'Data Association', null, 'data association')
+    ];
 	
 	this.addPaletteFunctions('bpmn', 'BPMN ' + mxResources.get('general'), false, fns);
 };
@@ -1782,12 +1783,12 @@ Sidebar.prototype.addBpmnEventPalette = function(dir, expand)
 
     var fns =
         [
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis', null, null, 'start general event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis', null, null, 'general event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis', null, null, 'end general event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Empfangsnachricht Startereignis', null, null, 'start nachricht message event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Empfangsnachricht Zwischenereignis ', null, null, 'nachricht message event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Nachricht', null, null, 'end message nachricht event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Start Event', null, null, 'start general event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Intermediate Event', null, null, 'general event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.general_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'End Event', null, null, 'end general event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Receive Message Start Event', null, null, 'start nachricht message event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Receive Message Intermediate Event ', null, null, 'nachricht message event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.message_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Receive Message End Event', null, null, 'end message nachricht event ereignis'),
             this.addEntry('bpmn event message send intermediate', function()
             {
                 var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_intermediate;whiteSpace=wrap;size=16;html=1;');
@@ -1799,7 +1800,7 @@ Sidebar.prototype.addBpmnEventPalette = function(dir, expand)
                 celll.geometry.offset = new mxPoint(7.5, 15);
                 cell.insert(celll);
 
-                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Sendenachricht Zwischenereignis');
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Send Message Intermediate Event');
             }),
 
             this.addEntry('bpmn event message send end', function()
@@ -1813,23 +1814,74 @@ Sidebar.prototype.addBpmnEventPalette = function(dir, expand)
                 celll.geometry.offset = new mxPoint(7.5, 15);
                 cell.insert(celll);
 
-                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Sendenachricht Endereignis');
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Send Message End Event');
             }),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Zeit', null, null, 'start zeit timer event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Zeit', null, null, 'zeit timer event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;strokeWidth=2', 55, 55, '', 'Endereignis Zeit', null, null, 'end zeit timer event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.rule_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Bedingung', null, null, 'start bedingung rule event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.rule_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Bedingung', null, null, 'bedingung rule event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.link_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Startereignis Link', null, null, 'start link event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.link_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Link', null, null, 'link event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.link_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;strokeWidth=2', 55, 55, '', 'Endereignis Link', null, null, 'end link event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.error_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Kompensation', null, null, 'kompensation compensation event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.error_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Kompensation', null, null, 'end kompensation compensation event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.cancel_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Abbruch', null, null, 'abbruch cancel event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.cancel_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Abbruch', null, null, 'end abbruch cancel event ereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Zwischenereignis Kompensation', null, null, 'kompensation compensation event zwischenereignis'),
-            this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Endereignis Kompensation', null, null, 'end kompensation compensation event ereignis'),
-            this.addEntry('bpmn event multiple mehrfach start', function()
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Time Start Event', null, null, 'start zeit timer event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Time Intermediate Event', null, null, 'zeit timer event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.timer_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;strokeWidth=2', 55, 55, '', 'Time End Event', null, null, 'end zeit timer event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.rule_start;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Condition Start Event', null, null, 'start bedingung rule event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.rule_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Condition Intermediate Event', null, null, 'bedingung rule event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.link_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Link Intermediate Event', null, null, 'link event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.link_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;strokeWidth=2', 55, 55, '', 'Link End Event', null, null, 'end link event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.error_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Error Intermediate Event', null, null, 'kompensation compensation event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.error_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Error End Event', null, null, 'end kompensation compensation event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.cancel_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Cancel Intermediate Event', null, null, 'abbruch cancel event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.cancel_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Cancel End Event', null, null, 'end abbruch cancel event ereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation_intermediate;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Compensation Intermediate Event', null, null, 'kompensation compensation event zwischenereignis'),
+            this.createVertexTemplateEntry('shape=mxgraph.bpmn.compensation_end;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Compensation End Event', null, null, 'end kompensation compensation event ereignis'),
+            this.addEntry('bpmn event signal start', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_start;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0.5, 1, 35, 29), 'shape=triangle;direction=north;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(-17,5, -42);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Signal Start Event');
+            }),
+            this.addEntry('bpmn event signal intermediate', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_intermediate;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0.5, 1, 35, 29), 'shape=triangle;direction=north;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(-17,5, -42);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Catching Signal Intermediate Event');
+            }),
+            this.addEntry('bpmn event signal intermediate', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_intermediate;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0.5, 1, 35, 29), 'shape=triangle;direction=north;fillColor=#000000;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(-17,5, -42);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Throwing Signal Intermediate Event');
+            }),
+            this.addEntry('bpmn event signal end', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_end;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0.5, 1, 35, 29), 'shape=triangle;direction=north;fillColor=#000000;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(-17,5, -42);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Signal End Event');
+            }),
+			this.addEntry('bpmn event multiple mehrfach start', function()
             {
                 var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_start;whiteSpace=wrap;size=16;html=1;');
                 cell.vertex = true;
@@ -1840,7 +1892,7 @@ Sidebar.prototype.addBpmnEventPalette = function(dir, expand)
                 celll.geometry.offset = new mxPoint(10, 7.5);
                 cell.insert(celll);
 
-                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Mehrfach Startereignis');
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Multiple Start Event');
             }),
             this.addEntry('bpmn event multiple mehrfach intermediate', function()
             {
@@ -1853,20 +1905,33 @@ Sidebar.prototype.addBpmnEventPalette = function(dir, expand)
                 celll.geometry.offset = new mxPoint(10, 7.5);
                 cell.insert(celll);
 
-                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Mehrfach Zwischenereignis');
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Catching Multiple Intermediate Event');
+            }),
+            this.addEntry('bpmn event multiple mehrfach intermediate', function()
+            {
+                var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_intermediate;whiteSpace=wrap;size=16;html=1;');
+                cell.vertex = true;
+
+                var celll = new mxCell('', new mxGeometry(0, 0, 35, 35), 'shape=mxgraph.basic.pentagon;fillColor=#000000;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                celll.geometry.relative = true;
+                celll.vertex = true;
+                celll.geometry.offset = new mxPoint(10, 7.5);
+                cell.insert(celll);
+
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Throwing Multiple Intermediate Event');
             }),
             this.addEntry('bpmn event multiple mehrfach end', function()
             {
                 var cell = new mxCell('', new mxGeometry(0, 0, 55, 55), 'shape=mxgraph.bpmn.general_end;whiteSpace=wrap;size=16;html=1;');
                 cell.vertex = true;
 
-                var celll = new mxCell('', new mxGeometry(0, 0, 35, 35), 'shape=mxgraph.basic.pentagon;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
+                var celll = new mxCell('', new mxGeometry(0, 0, 35, 35), 'shape=mxgraph.basic.pentagon;fillColor=#000000;html=1;whiteSpace=wrap;html=1;outlineConnect=0;');
                 celll.geometry.relative = true;
                 celll.vertex = true;
                 celll.geometry.offset = new mxPoint(10, 7.5);
                 cell.insert(celll);
 
-                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Mehrfach Endereignis');
+                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Multiple End Event');
             })
 			//this.createVertexTemplateEntry('shape=mxgraph.bpmn.multiple_instances;html=1;horizontal=1;childLayout=stackLayout;startSize=20;', 55, 55, '', 'Instanzereignis Mehrfach', null, null, 'mehrfach multiple event instanzereignis'),
 
@@ -1938,7 +2003,8 @@ Sidebar.prototype.addBpmnSupplementPalette = function(dir, expand)
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.business_rule_task;html=1;outlineConnect=0;', 14, 14, '', 'Business Rule Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'business_rule_task').join(' ')),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.service_task;html=1;outlineConnect=0;', 14, 14, '', 'Service Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'service_task').join(' ')),
             this.createVertexTemplateEntry('shape=mxgraph.bpmn.script_task;html=1;outlineConnect=0;', 14, 14, '', 'Script Task', null, null, this.getTagsForStencil('mxgraph.bpmn', 'script_task').join(' ')),
-			this.createVertexTemplateEntry('shape=singleArrow;html=1; arrowWidth=0.4;arrowSize=0.4;outlineConnect=0', 14,14, '', 'Arrow', null, null, 'bpmn arrow')
+			this.createVertexTemplateEntry('shape=singleArrow;html=1; arrowWidth=0.4;arrowSize=0.4;outlineConnect=0', 14,14, '', 'Arrow', null, null, 'bpmn arrow'),
+            this.createVertexTemplateEntry('shape=singleArrow;html=1; fillColor=#000000;arrowWidth=0.4;arrowSize=0.4;outlineConnect=0', 14,14, '', 'Filled Arrow', null, null, 'bpmn arrow')
         ];
 
     this.addPaletteFunctions('bpmn', 'BPMN Supplement', false, fns);
@@ -1991,24 +2057,135 @@ Sidebar.prototype.addSbpmSIDPalette = function (dir) {
                 celll.geometry.offset = new mxPoint(-15, -15);
                 edge.insert(celll);
 
-                var edge1 = new mxCell('', new mxGeometry(30, 30, 30, 30), 'endArrow=none;html=1;');
-                edge1.geometry.offset= new mxPoint(-55, -55);
-                edge1.geometry.relative = true;
-                celll.insert(edge1);
+                var grid1 = new mxCell('', new mxGeometry(0, 0, 5, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                grid1.geometry.offset= new mxPoint(0, 0);
+                grid1.geometry.relative = true;
+                grid1.vertex = true;
+                celll.insert(grid1);
+
+                var grid2 = new mxCell('', new mxGeometry(0, 0, 5, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                grid2.geometry.offset= new mxPoint(5, 0);
+                grid2.geometry.relative = true;
+                grid2.vertex = true;
+                celll.insert(grid2);
+
+                var grid3 = new mxCell('', new mxGeometry(0, 0, 5, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                grid3.geometry.offset= new mxPoint(10, 0);
+                grid3.geometry.relative = true;
+                grid3.vertex = true;
+                celll.insert(grid3);
+
+                var grid4 = new mxCell('', new mxGeometry(0, 0, 5, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                grid4.geometry.offset= new mxPoint(15, 0);
+                grid4.geometry.relative = true;
+                grid4.vertex = true;
+                celll.insert(grid4);
+
+                var grid5 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid5.geometry.offset= new mxPoint(0, 0);
+                grid5.geometry.relative = true;
+                grid5.vertex = true;
+                celll.insert(grid5);
+
+                var grid6 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid6.geometry.offset= new mxPoint(0, 5);
+                grid6.geometry.relative = true;
+                grid6.vertex = true;
+                celll.insert(grid6);
+
+                var grid7 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid7.geometry.offset= new mxPoint(0, 10);
+                grid7.geometry.relative = true;
+                grid7.vertex = true;
+                celll.insert(grid7);
+
+                var grid8 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid8.geometry.offset= new mxPoint(0, 15);
+                grid8.geometry.relative = true;
+                grid8.vertex = true;
+                celll.insert(grid8);
+
+                var grid9 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid9.geometry.offset= new mxPoint(0, 20);
+                grid9.geometry.relative = true;
+                grid9.vertex = true;
+                celll.insert(grid9);
+
+                var grid10 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid10.geometry.offset= new mxPoint(0, 25);
+                grid10.geometry.relative = true;
+                grid10.vertex = true;
+                celll.insert(grid10);
 
                 return sb.createEdgeTemplateFromCells([edge], 150, 0, 'Bedingung mit Geschäftsobjekt');
             }),
-            this.addEntry('geschäftsobjekt', function()
+            this.addEntry('geschaeftsobjekt', function()
             {
-                var cell = new mxCell('', new mxGeometry(0, 0, 30, 40), 'html=1;whiteSpace=wrap;outlineConnect=0;');
+                var cell = new mxCell('', new mxGeometry(0, 0, 20, 30), 'html=1;points=[];perimeter=orthogonalPerimeter;');
                 cell.vertex = true;
 
-                var edge1 = new mxCell('', new mxGeometry(0, 0, 30, 0), 'shape=singleArrow;endArrow=none;html=1;');
-                edge1.geometry.offset= new mxPoint(6, 6);
-                edge1.geometry.relative = true;
-                cell.insert(edge1);
+                var grid1 = new mxCell('', new mxGeometry(0, 0, 5, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                grid1.geometry.offset= new mxPoint(0, 0);
+                grid1.geometry.relative = true;
+                grid1.vertex = true;
+                cell.insert(grid1);
 
-                return sb.createVertexTemplateFromCells([cell], cell.geometry.width, cell.geometry.height, 'Geschäftsobjekt');
+                var grid2 = new mxCell('', new mxGeometry(0, 0, 5, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                grid2.geometry.offset= new mxPoint(5, 0);
+                grid2.geometry.relative = true;
+                grid2.vertex = true;
+                cell.insert(grid2);
+
+                var grid3 = new mxCell('', new mxGeometry(0, 0, 5, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                grid3.geometry.offset= new mxPoint(10, 0);
+                grid3.geometry.relative = true;
+                grid3.vertex = true;
+                cell.insert(grid3);
+
+                var grid4 = new mxCell('', new mxGeometry(0, 0, 5, 30), 'shape=partialRectangle;html=1;outlineConnect=0;');
+                grid4.geometry.offset= new mxPoint(15, 0);
+                grid4.geometry.relative = true;
+                grid4.vertex = true;
+                cell.insert(grid4);
+
+                var grid5 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid5.geometry.offset= new mxPoint(0, 0);
+                grid5.geometry.relative = true;
+                grid5.vertex = true;
+                cell.insert(grid5);
+
+                var grid6 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid6.geometry.offset= new mxPoint(0, 5);
+                grid6.geometry.relative = true;
+                grid6.vertex = true;
+                cell.insert(grid6);
+
+                var grid7 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid7.geometry.offset= new mxPoint(0, 10);
+                grid7.geometry.relative = true;
+                grid7.vertex = true;
+                cell.insert(grid7);
+
+                var grid8 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid8.geometry.offset= new mxPoint(0, 15);
+                grid8.geometry.relative = true;
+                grid8.vertex = true;
+                cell.insert(grid8);
+
+                var grid9 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid9.geometry.offset= new mxPoint(0, 20);
+                grid9.geometry.relative = true;
+                grid9.vertex = true;
+                cell.insert(grid9);
+
+                var grid10 = new mxCell('', new mxGeometry(0, 0, 20, 5), 'shape=partialRectangle;fillColor=none;html=1;outlineConnect=0;');
+                grid10.geometry.offset= new mxPoint(0, 25);
+                grid10.geometry.relative = true;
+                grid10.vertex = true;
+                cell.insert(grid10);
+
+
+                return sb.createVertexTemplateFromCells([cell], 20, 30, 'Geschaeftsobjekt');
             })
 		];
     this.addPaletteFunctions('sbpm', 'S-BPM SID' , false, fns);
